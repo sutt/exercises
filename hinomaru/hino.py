@@ -4,6 +4,9 @@ import os, sys, random, time, math
 from data.data import import_data
 
 from utils.utils import recurse_dims, mod
+from utils.utils import tilemark, matchtile
+from utils.utils import xyt, xy2code, v2xy
+from utils.utils import strikeout
 
 SOLUTION, TILES = import_data()
 s, t = SOLUTION, TILES
@@ -15,15 +18,9 @@ _SYVECS, _SXDOTS = recurse_dims(s)
 #-------------------------------
 
 
-
-
-
-
 modx = mod((_TXDOTS,_TYVECS),_SXDOTS)
 mody = mod((_TXDOTS,_TYVECS),_SYVECS)
 print modx, mody
-
-
 
 # z: orientation => 0: stout, 6longx3high ; 1: tall: 3longx6high
 modxy = [(x,y) for x in modx for y in mody]
@@ -35,45 +32,14 @@ combos = [(tile, flip,tileside,xyz,indt) for flip in range(2) for tileside in ra
 print len(combos)
 
 
-def tilemark(tx,xx,yy,zz,ff):
-    #if flip = -1 -> y can be bigger than x
-    flip = -1 if ff else 1
-    tt = [x[::flip] for x in tx[::flip]]
-    if not(zz):
-        out = tt[yy][xx]
-    else:    
-        out = tt[2-xx][yy]
-    return out
 
-def matchtile(tile,flip,xyz):
-    x,y,z = xyz[0], xyz[1], xyz[2]
-    r0, r1 = range(3), range(6)
-    xiter, yiter = (r0,r1) if z else (r1,r0)
-    try:
-        out = all( [s[y+ y0][x + x0] == tilemark(tile,x0,y0,z,flip) for x0 in xiter for y0 in yiter])
-        return out
-    except:
-        return False #error occurs because some shapes are bigger than smallest mod
-        
 #valid: if matchtile returns true, tile t, with params p matches to solution mat
-valid = filter(lambda i: matchtile(i[0][i[2]],i[1],i[3]), combos)   #THE BUG! this flips
+valid = filter(lambda i: matchtile(i[0][i[2]],i[1],i[3],s), combos)   #THE BUG! this flips
 print len(valid)
 
-#valid2: (tile, flip,tileside,xyz,indt, (xyt's))
-def v2xy(v):
-    x,y,z = v[3][0], v[3][1], v[3][2]
-    _xr, _yr = (_TYVECS, _TXDOTS) if z else (_TXDOTS, _TYVECS)
-    xy = [(xx + x, yy + y) for xx in range(_xr) for yy in range(_yr)]
-    return xy
 
-def xy2code(xy):
-    x,y = xy[0],xy[1]
-    return (y*_SXDOTS)+x   #numbering across, then down
 
-def xyt(info_obj):
-    return tuple(map(xy2code,v2xy(info_obj)))
-
-print valid[0][3]   
+#print valid[0][3]   
 print xyt(valid[0])    
 
 valid2 = map(lambda v: ( v[0], v[1], v[2], v[3],v[4], xyt(v) ) ,valid)
