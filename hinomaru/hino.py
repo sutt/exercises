@@ -4,20 +4,24 @@ import os, sys, random, time, math
 from data.data import import_data
 
 from utils.utils import recurse_dims, mod
-from utils.utils import tilemark, matchtile
-from utils.utils import xyt, xy2code, v2xy
+from utils.utils import Solution    
 from utils.utils import strikeout
 
 SOLUTION, TILES = import_data()
 s, t = SOLUTION, TILES
 
-print recurse_dims(t), recurse_dims(s)
+#Dimensions of Data
 _TILES, _SIDES,_TYVECS, _TXDOTS = recurse_dims(t)
 _SYVECS, _SXDOTS = recurse_dims(s)
+print recurse_dims(t), recurse_dims(s)
 
-#-------------------------------
+#Solution functions and mappings
+sol = Solution(s=s,_Y=_SYVECS,_X= _SXDOTS)
+tilemark = sol.tilemark
+matchtile = sol.matchtile
+xy2code, v2xy, xyt = sol.xy2code, sol.v2xy, sol.xyt
 
-
+#----------------------------
 modx = mod((_TXDOTS,_TYVECS),_SXDOTS)
 mody = mod((_TXDOTS,_TYVECS),_SYVECS)
 print modx, mody
@@ -30,11 +34,11 @@ print len(modxyz)
 
 combos = [(tile, flip,tileside,xyz,indt) for flip in range(2) for tileside in range(2) for xyz in modxyz for indt,tile in enumerate(t)]
 print len(combos)
-
+#--------------------------------------
 
 
 #valid: if matchtile returns true, tile t, with params p matches to solution mat
-valid = filter(lambda i: matchtile(i[0][i[2]],i[1],i[3],s), combos)   #THE BUG! this flips
+valid = filter(lambda i: matchtile(i[0][i[2]],i[1],i[3]), combos)   #THE BUG! this flips
 print len(valid)
 
 

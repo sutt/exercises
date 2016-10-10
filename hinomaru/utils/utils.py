@@ -1,4 +1,5 @@
 def recurse_dims(obj):
+    """takes nested-list, and find size at each child node (non-jagged)"""
     try:
         next = obj[:]
     except:
@@ -20,40 +21,51 @@ def mod(dims,solution):
             any( map(lambda dim: (p) % (dim) == 0, dims) ), \
             range(0,solution) )
 
+            
 
-def tilemark(tx,xx,yy,zz,ff):
-    #if flip = -1 -> y can be bigger than x
-    flip = -1 if ff else 1
-    tt = [x[::flip] for x in tx[::flip]]
-    if not(zz):
-        out = tt[yy][xx]
-    else:    
-        out = tt[2-xx][yy]
-    return out
-
-def matchtile(tile,flip,xyz,s):
-    x,y,z = xyz[0], xyz[1], xyz[2]
-    r0, r1 = range(3), range(6)
-    xiter, yiter = (r0,r1) if z else (r1,r0)
-    try:
-        out = all( [s[y+ y0][x + x0] == tilemark(tile,x0,y0,z,flip) for x0 in xiter for y0 in yiter])
-        return out
-    except:
-        return False #error occurs because some shapes are bigger than smallest mod
         
-#valid2: (tile, flip,tileside,xyz,indt, (xyt's))
-def v2xy(v,_Y,_X):
-    x,y,z = v[3][0], v[3][1], v[3][2]
-    _xr, _yr = (_Y, _X) if z else (_X, _Y)
-    xy = [(xx + x, yy + y) for xx in range(_xr) for yy in range(_yr)]
-    return xy
+class Solution:
+    
+    """functions which use data from solution"""
 
-def xy2code(xy):
-    x,y = xy[0],xy[1]
-    return (y*_SXDOTS)+x   #numbering across, then down
+    def __init__(self,**kwargs):
+        self.s = kwargs.get('s',[])
+        self._Y = kwargs.get('_Y',0)
+        self._X = kwargs.get('_X',0)
+        
+    @staticmethod
+    def tilemark(tx,xx,yy,zz,ff):
+        #if flip = -1 -> y can be bigger than x
+        flip = -1 if ff else 1
+        tt = [x[::flip] for x in tx[::flip]]
+        if not(zz):
+            out = tt[yy][xx]
+        else:    
+            out = tt[2-xx][yy]
+        return out
+        
+    def matchtile(self,tile,flip,xyz):
+        x,y,z = xyz[0], xyz[1], xyz[2]
+        r0, r1 = range(3), range(6)
+        xiter, yiter = (r0,r1) if z else (r1,r0)
+        try:
+            out = all( [self.s[y+ y0][x + x0] == self.tilemark(tile,x0,y0,z,flip) for x0 in xiter for y0 in yiter])
+            return out
+        except:
+            return False #error occurs because some shapes are bigger than smallest mod
+            
+    def v2xy(self,v):
+        x,y,z = v[3][0], v[3][1], v[3][2]
+        _xr, _yr = (self._Y, self._X) if z else (self._X, self._Y)
+        xy = [(xx + x, yy + y) for xx in range(_xr) for yy in range(_yr)]
+        return xy
 
-def xyt(info_obj):
-    return tuple(map(xy2code,v2xy(info_obj)))
+    def xy2code(self,xy):
+        x,y = xy[0],xy[1]
+        return (y*self._X)+x   #numbering across, then down
+
+    def xyt(self,info_obj):
+        return tuple(map(self.xy2code,self.v2xy(info_obj)))
     
     
 def strikeout(x):    
