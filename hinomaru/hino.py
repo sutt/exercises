@@ -6,65 +6,44 @@ from data.data import import_data
 from utils.utils import recurse_dims, mod
 from utils.utils import Solution    
 from utils.utils import strikeout
+from utils.types import tileHolder, playHolder
 
 SOLUTION, TILES = import_data()
-s, t = SOLUTION, TILES
-
-#Dimensions of Data
-_TILES, _SIDES,_TYVECS, _TXDOTS = recurse_dims(t)
-_SYVECS, _SXDOTS = recurse_dims(s)
-print recurse_dims(t), recurse_dims(s)
 
 #Solution functions and mappings
-sol = Solution(s=s,_Y=_SYVECS,_X= _SXDOTS)
-tilemark = sol.tilemark
-matchtile = sol.matchtile
-xy2code, v2xy, xyt = sol.xy2code, sol.v2xy, sol.xyt
+_SYVECS, _SXDOTS = recurse_dims(SOLUTION)
+sol = Solution( s=SOLUTION, _Y=_SYVECS, _X=_SXDOTS)
 
-#----------------------------
-modx = mod((_TXDOTS,_TYVECS),_SXDOTS)
-mody = mod((_TXDOTS,_TYVECS),_SYVECS)
-print modx, mody
+#Build all possilbe Plays
+play = playHolder()
 
-# z: orientation => 0: stout, 6longx3high ; 1: tall: 3longx6high
-modxy = [(x,y) for x in modx for y in mody]
-modxyz = [(a[0],a[1],b) for a in modxy for b in range(2)]
-print modxyz[:4]
-print len(modxyz)
+_TILES, _SIDES,_TYVECS, _TXDOTS = recurse_dims(TILES)
 
-combos = [(tile, flip,tileside,xyz,indt) for flip in range(2) for tileside in range(2) for xyz in modxyz for indt,tile in enumerate(t)]
+tile_dims = (_TXDOTS,_TYVECS)
+modx, mody = mod(tile_dims,_SXDOTS), mod(tile_dims,_SYVECS)
+Z,Flip = range(2),range(2)
+
+combos = [ play(tilenum,tileside,x,y,z,flip) \
+                for tilenum in range(_TILES) \
+                for tileside in range(_SIDES) \
+                for x in modx \
+                for y in mody \
+                for z in Z    \
+                for flip in Flip ]
+                
 print len(combos)
-#--------------------------------------
+
+#Reduce combos to valid plays
+valids = filter(lambda play_i: sol.match_tile_to_board(TILES,play_i), combos) 
+print len(valids)
+
+#Enhance the information on each play-object
+valids_misc = map(lambda p: sol.xyt(p) ,valids)
+print valids_misc[:3]
 
 
-#valid: if matchtile returns true, tile t, with params p matches to solution mat
-valid = filter(lambda i: matchtile(i[0][i[2]],i[1],i[3]), combos)   #THE BUG! this flips
-print len(valid)
 
-
-
-#print valid[0][3]   
-print xyt(valid[0])    
-
-valid2 = map(lambda v: ( v[0], v[1], v[2], v[3],v[4], xyt(v) ) ,valid)
-print valid2[0]
-
-
-# each v in valid will strike out a portion of other v's
-# -> so we can update strikeout vec as union of preproc's stikeouts
-
-def strikeout(x):    
-    valid3 = [(i,v) for i,v in enumerate(valid2)]
-    tile_i, xy_list = valid2[x][4], valid2[x][5] 
-
-    out1 = filter(lambda v: v[1][4] == tile_i ,valid3)
-    ind1 = map(lambda v: v[0] ,out1)
-
-    out2 = filter(lambda v:any(map(lambda xyt: xyt in xy_list ,v[1][5]) ),valid3)
-    ind2 = map(lambda v: v[0] ,out2)
-    
-    return list( set.union(set(ind1), set(ind2) ) )
-
+#Analyze preprocessed data and heuristic computed from data
 so = [[] for i in range(len(valid2))]
 for i in range(len(valid2)) :
     so[i].extend(strikeout(i))
@@ -75,6 +54,7 @@ print '----'
 print outs
 print '----'
 print max(outs),min(outs)
+
 
 def puzzle(**kwargs):
     layout = []
@@ -130,6 +110,7 @@ print ret2
 
 #ret = puzzle(tries = 100000, Log=False)
 
+#Run a search
 wins = []
 for trial in range(2):
     wins.append(puzzle(tries=100000,Log = False))   
@@ -138,6 +119,7 @@ print wins
 win1 = wins[0][0]
 win_v = [valid2[w] for w in win1]
 
+#printout results
 letters = 'abcdefghijkl'
 letters = list(letters)
 dletters = {}

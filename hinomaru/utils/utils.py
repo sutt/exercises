@@ -1,5 +1,9 @@
+from types import tileHolder, playHolder
+play = playHolder()
+
 def recurse_dims(obj):
-    """takes nested-list, and find size at each child node (non-jagged)"""
+    """Takes [nested] list, Return list of length-of-list at each recursive level of input-list. Must be non-jagged in that each level has same length for each member."""
+    
     try:
         next = obj[:]
     except:
@@ -16,10 +20,10 @@ def recurse_dims(obj):
         next = next[0]
     return dims
     
-def mod(dims,solution):
+def mod(tile_dims,solution_dim):
     return filter(lambda p: \
-            any( map(lambda dim: (p) % (dim) == 0, dims) ), \
-            range(0,solution) )
+            any( map(lambda dim: (p) % (dim) == 0, tile_dims) ), \
+            range(0,solution_dim) )
 
             
 
@@ -33,43 +37,56 @@ class Solution:
         self._Y = kwargs.get('_Y',0)
         self._X = kwargs.get('_X',0)
         
-    @staticmethod
-    def tilemark(tx,xx,yy,zz,ff):
-        #if flip = -1 -> y can be bigger than x
-        flip = -1 if ff else 1
-        tt = [x[::flip] for x in tx[::flip]]
-        if not(zz):
-            out = tt[yy][xx]
+    def get_tile_dot(self,tdata,p,xx,yy):
+        """xx, yy: relative to top-left corner of tile"""
+        
+        f = -1 if p.flip else 1
+        tdata_f = [x[::f] for x in tdata[::f]]
+        
+        if not(p.z):
+            out = tdata_f[yy][xx]
         else:    
-            out = tt[2-xx][yy]
+            out = tdata_f[2-xx][yy]
         return out
         
-    def matchtile(self,tile,flip,xyz):
-        x,y,z = xyz[0], xyz[1], xyz[2]
+    def match_tile_to_board(self,tiles,p):
+        """returns Boolean of whether each tile-dot matches the corresponding spot on the solution"""
+        
+        x0,y0 = p.x, p.y
+        tdata = tiles[p.tilenum][p.tileside]
+        
         r0, r1 = range(3), range(6)
-        xiter, yiter = (r0,r1) if z else (r1,r0)
+        xiter, yiter = (r0,r1) if p.z else (r1,r0)
+        
         try:
-            out = all( [self.s[y+ y0][x + x0] == self.tilemark(tile,x0,y0,z,flip) for x0 in xiter for y0 in yiter])
-            return out
+            matches = [self.s[y0 + _y][x0 + _x] == self.get_tile_dot(tdata,p,_x,_y) for _x in xiter for _y in yiter] 
+            return all(matches)
         except:
-            return False #error occurs because some shapes are bigger than smallest mod
-            
-    def v2xy(self,v):
-        x,y,z = v[3][0], v[3][1], v[3][2]
-        _xr, _yr = (self._Y, self._X) if z else (self._X, self._Y)
+            return False #error: a portion of tile is off the board
+        
+        
+    def v2xy(self,p):
+        x,y,z = p.x,p.y,p.z
+        _xr, _yr = (3, 6) if z else (6, 3)
         xy = [(xx + x, yy + y) for xx in range(_xr) for yy in range(_yr)]
         return xy
 
     def xy2code(self,xy):
-        x,y = xy[0],xy[1]
+        x,y=xy[0],xy[1]
         return (y*self._X)+x   #numbering across, then down
 
-    def xyt(self,info_obj):
-        return tuple(map(self.xy2code,self.v2xy(info_obj)))
+    def xyt(self,play_i):
+        return tuple(map(self.xy2code,self.v2xy(play_i)))
+
+class SearchData:
+
+    def __init__(self):
+        self.x = []         
     
-    
-def strikeout(x):    
-    valid3 = [(i,v) for i,v in enumerate(valid2)]
+def strikeout(x,play_i,play_misc):    
+    # each v in valid will strike out a portion of other v's
+    # -> so we can update strikeout vec as union of preproc's stikeouts
+    ivalids = ((i,v) for i,v in enumerate(valids))
     tile_i, xy_list = valid2[x][4], valid2[x][5] 
 
     out1 = filter(lambda v: v[1][4] == tile_i ,valid3)
