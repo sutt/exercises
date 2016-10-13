@@ -42,13 +42,13 @@ valids_misc = map(lambda p: sol.xyt(p) ,valids)
 print valids_misc[:3]
 
 
-
 #Analyze preprocessed data and heuristic computed from data
-so = [[] for i in range(len(valid2))]
-for i in range(len(valid2)) :
-    so[i].extend(strikeout(i))
+#so_data = zip([p.tilenum for p in valids], valids_misc)
+so = [strikeout(i,v,valids,valids_misc) for i,v in enumerate(valids)]
+
     
-print so[:5]
+print so[:1]
+print so[1:2]
 outs = map(len,so)
 print '----'
 print outs

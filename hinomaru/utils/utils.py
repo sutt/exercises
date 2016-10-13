@@ -83,16 +83,17 @@ class SearchData:
     def __init__(self):
         self.x = []         
     
-def strikeout(x,play_i,play_misc):    
+def strikeout(i,play_i,valids,valids_misc):    
     # each v in valid will strike out a portion of other v's
     # -> so we can update strikeout vec as union of preproc's stikeouts
     ivalids = ((i,v) for i,v in enumerate(valids))
-    tile_i, xy_list = valid2[x][4], valid2[x][5] 
-
-    out1 = filter(lambda v: v[1][4] == tile_i ,valid3)
+    tile_i  = play_i.tilenum 
+    out1 = filter(lambda p: p[1].tilenum == tile_i ,ivalids)
     ind1 = map(lambda v: v[0] ,out1)
-
-    out2 = filter(lambda v:any(map(lambda xyt: xyt in xy_list ,v[1][5]) ),valid3)
+    
+    ixyt = ((i,v) for i,v in enumerate(valids_misc))
+    xylist_i = valids_misc[i]
+    out2 = filter(lambda v:any(map(lambda xyt: xyt in xylist_i ,v[1]) ),ixyt)
     ind2 = map(lambda v: v[0] ,out2)
     
     return list( set.union(set(ind1), set(ind2) ) )
