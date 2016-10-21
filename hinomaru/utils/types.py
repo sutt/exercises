@@ -14,3 +14,13 @@ def playHolder():
     """PlayHolder holds all 6 pieces of information to place a tile on the board"""
     PH_factory = namedtuple('PlayHolder' ,'tilenum tileside x y z flip')
     return PH_factory
+
+def printerHolder():
+    """not used right now"""
+    type_factory = namedtuple('PrinterHolder' ,'tilenum tdata x y z flip')
+    return type_factory
+    
+def playplusHolder():
+    """playplus holds play as the basic info with augmented info about that play. <data> is both sides so it must be indexed by play.tileside to give tdata"""
+    type_factory = namedtuple('PlayplusHolder' ,'play xyt data')
+    return type_factory

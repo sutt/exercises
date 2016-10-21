@@ -6,8 +6,10 @@ from data.data import import_data
 from utils.utils import recurse_dims, mod
 from utils.utils import Solution    
 from utils.utils import strikeout
-from utils.types import tileHolder, playHolder
+from utils.types import tileHolder, playHolder, playplusHolder
 from utils.search import puzzle
+
+from utils.printout import build_solution_graphic
 
 SOLUTION, TILES = import_data()
 
@@ -63,8 +65,6 @@ ret2 = reduce( lambda x,y: str(x) + "\n" + str(y), ret)
 print ret2
 
 
-#ret = puzzle(tries = 100000, Log=False)
-
 #Run a search
 def do_some(some):
     if some:
@@ -77,13 +77,19 @@ def do_some(some):
     return wins
     
 wins = do_some(False)
-win1 = wins[0][0]
-win_v = [valids[w] for w in win1]
 
 #Printout results
-out = build_solution_graphic(win1)
+win1 = wins[0][0]
+playplus = playplusHolder()
+ppWin1 = [playplus(play = valids[w] \
+                   ,xyt = valids_misc[w] \
+                   ,data = TILES[valids[w].tilenum] \
+                    )  for w in win1]
+
+out = build_solution_graphic(ppWin1, sol, dots=False)
 print out
 
-out = build_puzzle_mark(rows2)
+out = build_solution_graphic(ppWin1, sol, dots=True)
 print out
 
+print ppWin1[0]

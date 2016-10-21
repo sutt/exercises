@@ -75,6 +75,7 @@ class Solution:
         x,y=xy[0],xy[1]
         return (y*self._X)+x   #numbering across, then down
         
+    @staticmethod
     def code2xy(xyt):
         y = int(xyt / 18)
         x =  xyt % 18

@@ -1,5 +1,9 @@
 from utils.types import tileHolder, playHolder
 
+#inp_rows = rows_letter if kwargs.get('dots',False) else rows_mark
+
+w = 1 if False else 2
+print w
 a = list('abc')
 print a
 
@@ -39,4 +43,4 @@ from collections import namedtuple as nt
     # why is this version so much faster than ipython? 
         #because valids is much smaller than valid2?
     
-    [([104, 30, 64, 119, 45, 13, 63, 35, 76, 111, 89, 11], 4848), ([17, 10, 116, 65, 44, 62, 90, 107, 34, 82, 110, 33], 8738)]
+    #[([104, 30, 64, 119, 45, 13, 63, 35, 76, 111, 89, 11], 4848), ([17, 10, 116, 65, 44, 62, 90, 107, 34, 82, 110, 33], 8738)]

@@ -1,5 +1,5 @@
-from utils.utils import Solution
-from utils.types import playHolder
+from utils import Solution
+from types import playHolder, playplusHolder
 
 #tilemark -> sol.tiledot
 
@@ -9,6 +9,45 @@ letters = list('abcdefghijkl')
 for i,v in enumerate(letters):
     dletters[i]=v.capitalize() 
 
+    
+#valid2: (tile, flip,tileside,xyz,indt, (xyt's))
+
+def lookup_letter(_xyt, mywin):
+
+    _playplus = filter(lambda pp: _xyt in pp.xyt, mywin)
+
+    if len(_playplus) != 1:
+        return "?"
+    _playplus = _playplus[0]
+    
+    try:
+        tilenum = _playplus.play.tilenum
+        return dletters[tilenum]
+    except:
+        return "?"
+    
+    
+def lookup_mark(_xyt, mywin, sol):
+    
+    _playplus = filter(lambda pp: _xyt in pp.xyt, mywin)
+    
+    if len(_playplus) != 1:
+        return "?"
+    _playplus = _playplus[0]
+    
+    try:
+        
+        tside = _playplus.play.tileside
+        tdata = _playplus.data[tside]
+        
+        x0,y0 = _playplus.play.x, _playplus.play.y
+        x1, y1 = sol.code2xy(_xyt)
+        x,y = x1 - x0, y1 - y0
+        
+        return str(sol.get_tile_dot(tdata, _playplus.play, x, y))
+        #return str(sol.get_tile_dot(tdata, _playplus.play, 0, 0))
+    except:
+        return "?"
 
 def build_2d_graphic(inp_rows):
     s = ""
@@ -16,44 +55,20 @@ def build_2d_graphic(inp_rows):
         s += "".join(str(row))
         s += "\n"
     return s
-
-def lookup_letter(xyt):
-    v = filter(lambda v: xyt in v[5],win_v)
-    try:
-        tilenum = v[0][4]
-        return dletters[tilenum]
-    except:
-        return "?"
+        
+def build_solution_graphic(mywin, sol, **kwargs):
     
-    
-def lookup_mark(xyt):
-    vv = filter(lambda v: xyt in v[5],win_v)
-    try:
-        v = vv[0]
-        tside = v[2]
-        tdata = v[0][tside]
-        
-        z,f =  v[3][2], v[1]
-        
-        x0,y0, = v[3][0], v[3][1]
-        x1, y1 = code2xy(xyt)
-        x,y = x1 - x0, y1 - y0
-        
-        return str(tilemark(tdata,x,y,z,f))
-    except:
-        return "?"
-
-def build_solution_graphic(**kwargs):
     rows_letter,rows_mark = [], []
     for y in range(12):
-        row,row2 = "",""
+        row_l,row_m = "",""
         for x in range(18):
             xyt = x + (y*18)
-            row_l += lookup_letter(xyt)
-            row_m += lookup_mark(xyt)
+            row_l += lookup_letter(xyt, mywin)
+            row_m += lookup_mark(xyt, mywin, sol)
         rows_letter.append(row_l)
         rows_mark.append(row_m)
     
-    inp_rows = rows_letter if kwargs.get('dots',False) else rows_mark
+    inp_rows = rows_mark if kwargs.get('dots',False) else rows_letter
+    
     return build_2d_graphic(inp_rows)
     
