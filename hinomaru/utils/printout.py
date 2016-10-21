@@ -1,5 +1,6 @@
 from utils.utils import Solution
 from utils.types import playHolder
+
 #tilemark -> sol.tiledot
 
 
@@ -9,14 +10,7 @@ for i,v in enumerate(letters):
     dletters[i]=v.capitalize() 
 
 
-def build_puzzle_letter(inp_rows):
-    s = ""
-    for row in inp_rows:
-        s += "".join(row)
-        s += "\n"
-    return s
-
-def build_puzzle_mark(inp_rows):
+def build_2d_graphic(inp_rows):
     s = ""
     for row in inp_rows:
         s += "".join(str(row))
@@ -31,11 +25,7 @@ def lookup_letter(xyt):
     except:
         return "?"
     
-def code2xy(xyt):
-    y = int(xyt / 18)
-    x =  xyt % 18
-    return (x,y)
-
+    
 def lookup_mark(xyt):
     vv = filter(lambda v: xyt in v[5],win_v)
     try:
@@ -48,21 +38,22 @@ def lookup_mark(xyt):
         x0,y0, = v[3][0], v[3][1]
         x1, y1 = code2xy(xyt)
         x,y = x1 - x0, y1 - y0
-        #return str(x)
-        #return str(1)
+        
         return str(tilemark(tdata,x,y,z,f))
     except:
         return "?"
 
-def build_solution_graphic():
-    rows,rows2 = [], []
+def build_solution_graphic(**kwargs):
+    rows_letter,rows_mark = [], []
     for y in range(12):
         row,row2 = "",""
         for x in range(18):
             xyt = x + (y*18)
-            row += lookup_letter(xyt)
-            row2 += lookup_mark(xyt)
-        rows.append(row)
-        rows2.append(row2)        
-    out = build_puzzle_letter(rows)
-    return out
+            row_l += lookup_letter(xyt)
+            row_m += lookup_mark(xyt)
+        rows_letter.append(row_l)
+        rows_mark.append(row_m)
+    
+    inp_rows = rows_letter if kwargs.get('dots',False) else rows_mark
+    return build_2d_graphic(inp_rows)
+    

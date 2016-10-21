@@ -24,7 +24,19 @@ from collections import namedtuple as nt
         # allow it to start with a certain known layout
         # back a random amount
         # select from available
+        # TOTAL_PLAYS constant: (solution_area / tile area)
+            #another way to do this is (tiles / sides)
     
     #after search result
         # Xmodularize
         # refactor tilemark ->solution.get_tile_dot
+        # refactor hardcoded 
+
+###TODO 10/20
+    #Xpuzzle - get a win
+    # printout - get a printout
+    
+    # why is this version so much faster than ipython? 
+        #because valids is much smaller than valid2?
+    
+    [([104, 30, 64, 119, 45, 13, 63, 35, 76, 111, 89, 11], 4848), ([17, 10, 116, 65, 44, 62, 90, 107, 34, 82, 110, 33], 8738)]

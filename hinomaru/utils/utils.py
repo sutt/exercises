@@ -74,6 +74,11 @@ class Solution:
     def xy2code(self,xy):
         x,y=xy[0],xy[1]
         return (y*self._X)+x   #numbering across, then down
+        
+    def code2xy(xyt):
+        y = int(xyt / 18)
+        x =  xyt % 18
+        return (x,y)
 
     def xyt(self,play_i):
         return tuple(map(self.xy2code,self.v2xy(play_i)))
