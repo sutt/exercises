@@ -60,23 +60,31 @@ print max(outs),min(outs)
 
 
 #demo puzzle algo
-ret = puzzle(valids, so, tries = 20, Log=True)
+ret = puzzle(so, tries = 20, Log=True)
 ret2 = reduce( lambda x,y: str(x) + "\n" + str(y), ret)
-print ret2
+#print ret2
 
+gIniLayout = True
+lay11 = [42, 82, 17, 98, 66, 91, 32, 124, 36, 62, 9]
+lay10 = [42, 82, 17, 98, 66, 91, 32, 124, 36, 62]
+lay9 = [42, 82, 17, 98, 66, 91, 32, 124, 36]
 
 #Run a search
-def do_some(some):
+def do_some(some ):
     if some:
         wins = []
         for trial in range(2):
-            wins.append(puzzle(valids, so, tries=100000,Log = False))   
+            if gIniLayout:
+                wins.append(puzzle(so, ini_layout = [42,82,17,98], \
+                                   Log = False, tries = 100000))   
+            else:
+                wins.append(puzzle(so, tries=100000,Log = False))   
         print wins    
     else:
         wins = [([104, 30, 64, 119, 45, 13, 63, 35, 76, 111, 89, 11], 4848), ([17, 10, 116, 65, 44, 62, 90, 107, 34, 82, 110, 33], 8738)]
     return wins
     
-wins = do_some(False)
+wins = do_some(True)
 
 #Printout results
 win1 = wins[0][0]
