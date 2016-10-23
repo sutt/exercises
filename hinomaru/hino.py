@@ -11,6 +11,7 @@ from utils.search import puzzle
 
 from utils.printout import build_solution_graphic
 
+
 SOLUTION, TILES = import_data()
 
 #Solution functions and mappings

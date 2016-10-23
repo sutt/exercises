@@ -10,6 +10,11 @@ print a
 play = playHolder()
 p1 = play(1,2,3,4,5,6)
 
+class MyClass:
+    def hello(self):
+        print 'World'
+        return 1
+
 #'tile_num tileside x y z flip'
 print p1
 print p1.tileside
@@ -25,15 +30,15 @@ from collections import namedtuple as nt
 
 ###TODO 10/18
     # search.puzzle()
-        # allow it to start with a certain known layout
-        # back a random amount
-        # select from available
+        # X allow it to start with a certain known layout
+        # X back a random amount
+        # X select from available
         # TOTAL_PLAYS constant: (solution_area / tile area)
             #another way to do this is (tiles / sides)
     
     #after search result
-        # Xmodularize
-        # refactor tilemark ->solution.get_tile_dot
+        # X modularize
+        # X refactor tilemark ->solution.get_tile_dot
         # refactor hardcoded 
 
 ###TODO 10/20
@@ -47,4 +52,5 @@ from collections import namedtuple as nt
     
 ###TODO 10/22
 
-    # puzzle takes a set of valids into layout
+    # X puzzle takes a set of valids into layout
+    #  little refactoring up top for consistency

@@ -9,6 +9,7 @@ def puzzle(strikeouts,**kwargs):
     TOTAL_PLACES = 12
     allv = range(len(strikeouts))  
     Log = kwargs.get('Log',False)
+    Noisy = kwargs.get('Noisy',False)
     
     #note: valids arent neccessary for this func, only strikeout
     #ivalids = [(i,v) for i,v in enumerate(valids)]
@@ -26,14 +27,18 @@ def puzzle(strikeouts,**kwargs):
     
     for try_i in range(kwargs.get('tries',20)):
 
+        #Check if you won
         if len(layout) == TOTAL_PLACES: 
-            print 'SUCCESS:', layout
-            print 'IN TRIES:', try_i
+            if Noisy:
+                print 'SUCCESS:', layout
+                print 'IN TRIES:', try_i
+            
             if Log:
                 return (layout,log)
             else:
                 return (layout,try_i)
 
+        #Build available
         if len(struckout) > 0:
             notavail = reduce(lambda x,y: x+y, struckout)
         else:
