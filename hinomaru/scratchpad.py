@@ -54,3 +54,8 @@ from collections import namedtuple as nt
 
     # X puzzle takes a set of valids into layout
     #  little refactoring up top for consistency
+    
+###Notes 10/28
+    #HackerRank, LeetCode, TopCoder, CodeFights, Stockfighter, etc.?
+    #http://play.elevatorsaga.com/
+    #Starfighter obituary: https://news.ycombinator.com/item?id=12415786
