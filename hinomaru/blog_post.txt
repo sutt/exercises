@@ -1,0 +1,13 @@
+
+Hinomaru intorduces the idea of algorithms with non-trivial data transformation steps
+
+The point is to refactor this puzzle:
+
+This will 
+ 2. and then we'll investigate if we can make some targetted changes to the problem space and see if the program still runs or if 
+ 
+ 
+ Things learned so far:
+ 
+	 - using unittest, your function names have to start with the word "test"
+	 - python imports are called relative to the directory you invoke python... this is key for importing classes in subdirectory into sibling directories.
