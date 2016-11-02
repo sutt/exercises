@@ -63,7 +63,7 @@ class PreProc:
         self.valids_misc = valids_misc
         self.strikeouts = so
         
-        print 'were doing a preproc'
+        #print 'were doing a preproc'
         #It appears Test.setUp is run each time before a test
         return 1
 

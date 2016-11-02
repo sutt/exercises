@@ -1,4 +1,4 @@
-from test.TestPreProc import TestClass
+from test.TestPreProc import ScratchTest
 import unittest
 from test.TestPreProc import main
 
