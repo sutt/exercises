@@ -1,28 +1,42 @@
 import os,sys, unittest
 from os import path
 
-#sys.path.append('..')
-#sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-#sys.path.append(os.path.join('..', 'utils'))
-
 if __name__ != "__main__":
-    """ We'll run ./runtest.py which imports these classes within
-        the ./test/ directory and then runs the test. So imports
-        are relative to root, not this file. """
+        # We'll run ./runtest.py which imports these classes within
+        # the ./test/ directory and then runs the test. So imports
+        # are relative to root, not this file. 
     from utils.utils import Solution
     from hino_test_stage import PreProc
+else:
+    # imports relative to /test/ here?
+    #sys.path.append('..')
+    #sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+    #sys.path.append(os.path.join('..', 'utils'))
+    pass
 
 class ScratchDummyClass:
     def __init__(self):
         self.data = [0]
+        self.data2 = range(10)
         print ' '
         print '>init Dummy...'
     def method(self):
-        print '...laborious processing step. now setup:'
+        print '...laborious processing step. now setup: '
+    def method2(self):
+        from random import randint
+        #self.data2 = randint(1,1000)
+        print 'this is only called in head of ScratchTest class'
+        
+GLOBAL_DATA = range(10)
+GLOBAL_DUMMY_INSTANCE = ScratchDummyClass()
+GLOBAL_DUMMY_INSTANCE.method()
+GLOBAL_DUMMY_INSTANCE.method2()
 
 class ScratchTest(unittest.TestCase):
-
-    def setUp(self):
+    
+    SCRATCH_DATA = range(10)
+    
+    def setUp(self,):
         """ This shows how to import a class in an outside module 
             from within a test class. But as can be seen, instantiating the class calls it fully before each test. """
         
@@ -31,18 +45,47 @@ class ScratchTest(unittest.TestCase):
         self.dummy_setup = ScratchDummyClass()
         self.dummy_setup.method()
         
-        self.precalled_dummy = []
+        self.precalled_dummy = GLOBAL_DUMMY_INSTANCE
+        # so the strategy is call method outside of test-class
+        # but save the results into the class
+        # then bring the class and its data into the test class here
         
         
-    def test_outside_class(self):
+    def test_1_outside_class(self):
+        #tests must start with the word "test"
+        #tests are run in alphabetic order 
         self.assertTrue(len(self.outside_class.s) == 0)
         self.assertEqual(self.outside_class._X, 0)
 
-    def test_fail_if_incorrect_order(self):
+    def test_2_fail_if_incorrect_order(self):
         self.assertNotEqual([1,2,3],[3,2,1])
         
-    def test_pass_if_incorrect_order(self):
+    def test_3_pass_if_incorrect_order(self):
         self.assertItemsEqual([1,2,3],[3,2,1])
+        
+    def test_4_using_local_data(self):
+        
+        from random import shuffle
+        
+        #its equal to itself
+        local_data = self.precalled_dummy.data2[:]
+        self.assertEqual(self.precalled_dummy.data2, local_data)
+
+        #shuffling a copy 
+        shuffle(local_data)
+        self.assertNotEqual( range(10), local_data)
+        self.assertItemsEqual( range(10), local_data)
+        
+        #reference to data is shuffled resulting in shuffling of 
+        #class level
+        local_data = self.precalled_dummy.data2
+        shuffle(local_data)
+        self.assertNotEqual(self.precalled_dummy.data2, range(10))
+        
+    def test_5_data_is_not_reset(self):
+        
+        # in test_4 we shuffled a ref to data2 which has not been undone
+        self.assertNotEqual(self.precalled_dummy.data2, range(10))
         
 
 class PreprocTests(unittest.TestCase):
@@ -112,8 +155,8 @@ def main():
     #s  = SearchData()
     #print s.x
     
-    pp = PreProc()
-    print 'ppcombos', str(pp.combos)
+    #pp = PreProc()
+    #print 'ppcombos', str(pp.combos)
     
     if False:
         unittest.main()
@@ -122,7 +165,7 @@ def main():
         suite = unittest.TestLoader().loadTestsFromTestCase(ScratchTest)
         unittest.TextTestRunner(verbosity=2).run(suite)
         
-        suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
-        unittest.TextTestRunner(verbosity=2).run(suite)
+        #suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
+        #unittest.TextTestRunner(verbosity=2).run(suite)
     return 1
 
