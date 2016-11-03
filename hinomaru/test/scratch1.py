@@ -10,6 +10,7 @@ class C:
 c = C()
 c.x = "hello"
 print c.x
+#test for git
 
 class C2(unittest.TestCase):
 
