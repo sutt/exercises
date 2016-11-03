@@ -36,14 +36,22 @@ class ScratchTest(unittest.TestCase):
     
     SCRATCH_DATA = range(10)
     
-    def setUp(self,):
+    #Notice this forces an instance call before, and even 
+    #if there is no instantiation of this class or call from TestLoader
+    SCRATCH_DUMMY_INSTANCE = ScratchDummyClass()
+    SCRATCH_DUMMY_INSTANCE.method()
+    SCRATCH_DUMMY_INSTANCE.method2()
+    
+    def setUp(self):
         """ This shows how to import a class in an outside module 
             from within a test class. But as can be seen, instantiating the class calls it fully before each test. """
         
         self.outside_class = Solution()
-        
-        self.dummy_setup = ScratchDummyClass()
-        self.dummy_setup.method()
+
+        InstaniateEachTime = False
+        if InstaniateEachTime:
+            self.dummy_setup = ScratchDummyClass()
+            self.dummy_setup.method()
         
         self.precalled_dummy = GLOBAL_DUMMY_INSTANCE
         # so the strategy is call method outside of test-class
@@ -90,27 +98,38 @@ class ScratchTest(unittest.TestCase):
 
 class PreprocTests(unittest.TestCase):
 
-    def setUp(self):
-        self.myclass = PreProc()
-        
-        self.myclass.perform_preproc()
     
-    def test_valids_length(self):
+    preproc1 = PreProc()
+    preproc1.perform_preproc()
+
+    def setUp(self,preprocobj=preproc1):
+        
+        #self.myclass = PreProc()
+        #self.myclass.perform_preproc()
+        self.myclass = preprocobj
+        
+        
+        self.so_data = [28, 28, 28, 28, 28, 28, 28, 28, 27, 26, 27, 26, 28, 28, 28, 28, 28, 28, 28, 28, 33, 33, 30, 30, 30, 30, 30, 30, 30, 30, 23, 21, 21, 23, 19, 16, 16, 19, 17, 18, 17, 18, 28, 25, 25, 28, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 27, 25, 25, 27, 20, 20, 27, 26, 27, 26, 19, 17, 17, 19, 26, 27, 26, 27, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 16, 15, 15, 16, 19, 19, 32, 32, 30, 30, 34, 34, 28, 28, 28, 28, 34, 34, 30, 30, 27, 27, 18, 18, 26, 26, 30, 30, 35, 35, 28, 28, 28, 28, 35, 35, 30, 30]
+    
+    
+    def test_1_valids_length(self):
         self.assertEqual( len(self.myclass.valids), 126)
         
-    def test_valids_less_than_combos(self):
+    def test_2_valids_less_than_combos(self):
         self.assertTrue( len(self.myclass.valids) < len(self.myclass.combos) )
 
-    def test_so_length(self):
+    def test_3_so_length(self):
         so = self.myclass.strikeouts
         valids = self.myclass.valids
 
         self.assertEqual( len(so), len(valids) )
         
         
-    def test_fail_order_specific_so(self):
+    def test_4_fail_order_specific_so(self):
         
-        data = [28, 28, 28, 28, 28, 28, 28, 28, 27, 26, 27, 26, 28, 28, 28, 28, 28, 28, 28, 28, 33, 33, 30, 30, 30, 30, 30, 30, 30, 30, 23, 21, 21, 23, 19, 16, 16, 19, 17, 18, 17, 18, 28, 25, 25, 28, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 27, 25, 25, 27, 20, 20, 27, 26, 27, 26, 19, 17, 17, 19, 26, 27, 26, 27, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 16, 15, 15, 16, 19, 19, 32, 32, 30, 30, 34, 34, 28, 28, 28, 28, 34, 34, 30, 30, 27, 27, 18, 18, 26, 26, 30, 30, 35, 35, 28, 28, 28, 28, 35, 35, 30, 30]
+        #by-value because one-preproc-method called for all tests
+        #and so want eliminate the ability to mutate this data
+        data = self.so_data[:]  
         
         from random import shuffle
         shuffle(data)
@@ -120,9 +139,9 @@ class PreprocTests(unittest.TestCase):
         
         self.assertNotEqual(outs, data)
         
-    def test_non_order_specific_so(self):
+    def test_5_non_order_specific_so(self):
         
-        data = [28, 28, 28, 28, 28, 28, 28, 28, 27, 26, 27, 26, 28, 28, 28, 28, 28, 28, 28, 28, 33, 33, 30, 30, 30, 30, 30, 30, 30, 30, 23, 21, 21, 23, 19, 16, 16, 19, 17, 18, 17, 18, 28, 25, 25, 28, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 27, 25, 25, 27, 20, 20, 27, 26, 27, 26, 19, 17, 17, 19, 26, 27, 26, 27, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 16, 15, 15, 16, 19, 19, 32, 32, 30, 30, 34, 34, 28, 28, 28, 28, 34, 34, 30, 30, 27, 27, 18, 18, 26, 26, 30, 30, 35, 35, 28, 28, 28, 28, 35, 35, 30, 30]
+        data = self.so_data[:]
         
         from random import shuffle
         shuffle(data)
@@ -130,11 +149,11 @@ class PreprocTests(unittest.TestCase):
         so = self.myclass.strikeouts
         outs = map(len,so)
 
-        self.assertListEqual(outs, data)
+        self.assertItemsEqual(outs, data)
         
-    def test_pass_order_specific_so(self):
+    def test_6_pass_order_specific_so(self):
         
-        data = [28, 28, 28, 28, 28, 28, 28, 28, 27, 26, 27, 26, 28, 28, 28, 28, 28, 28, 28, 28, 33, 33, 30, 30, 30, 30, 30, 30, 30, 30, 23, 21, 21, 23, 19, 16, 16, 19, 17, 18, 17, 18, 28, 25, 25, 28, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 27, 25, 25, 27, 20, 20, 27, 26, 27, 26, 19, 17, 17, 19, 26, 27, 26, 27, 32, 32, 37, 37, 31, 31, 31, 31, 37, 37, 32, 32, 16, 15, 15, 16, 19, 19, 32, 32, 30, 30, 34, 34, 28, 28, 28, 28, 34, 34, 30, 30, 27, 27, 18, 18, 26, 26, 30, 30, 35, 35, 28, 28, 28, 28, 35, 35, 30, 30]
+        data = self.so_data[:]
             
         so = self.myclass.strikeouts
         outs = map(len,so)
@@ -145,10 +164,11 @@ class PreprocTests(unittest.TestCase):
 
         
 if __name__ == "__main__":
-    suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    #suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
+    #unittest.TextTestRunner(verbosity=2).run(suite)
     #suite = unittest.TestLoader().loadTestsFromTestCase(Cc)
     #unittest.TextTestRunner(verbosity=2).run(suite)
+    pass
     
 
 def main():
@@ -165,7 +185,8 @@ def main():
         suite = unittest.TestLoader().loadTestsFromTestCase(ScratchTest)
         unittest.TextTestRunner(verbosity=2).run(suite)
         
-        #suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
-        #unittest.TextTestRunner(verbosity=2).run(suite)
+        suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
+        unittest.TextTestRunner(verbosity=2).run(suite)
+        
     return 1
 
