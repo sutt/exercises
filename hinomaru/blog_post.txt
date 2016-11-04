@@ -11,3 +11,18 @@ This will
  
 	 - using unittest, your function names have to start with the word "test"
 	 - python imports are called relative to the directory you invoke python... this is key for importing classes in subdirectory into sibling directories.
+	 
+	 
+Recipes:
+
+	error: Your local changes to the following files would be overwritten by merge:
+        hinomaru/hino.py
+        hinomaru/utils/utils.py
+	Please, commit your changes or stash them before you can merge.
+	Aborting
+	
+	
+	>git stash
+	>git pull origin master
+	>git stash pop
+		http://stackoverflow.com/questions/15745045/how-do-i-resolve-git-saying-commit-your-changes-or-stash-them-before-you-can-me
