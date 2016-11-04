@@ -7,6 +7,10 @@ if __name__ != "__main__":
         # are relative to root, not this file. 
     from utils.utils import Solution
     from hino_test_stage import PreProc
+    from utils.types import tileHolder, playHolder
+    from utils.types import tileHolder, playHolder, playplusHolder
+    play = playHolder()
+    from data.data import import_data
 else:
     # imports relative to /test/ here?
     #sys.path.append('..')
@@ -113,6 +117,7 @@ class PreprocTests(unittest.TestCase):
     
     
     def test_1_valids_length(self):
+    
         self.assertEqual( len(self.myclass.valids), 126)
         
     def test_2_valids_less_than_combos(self):
@@ -159,34 +164,82 @@ class PreprocTests(unittest.TestCase):
         outs = map(len,so)
 
         self.assertEqual(outs, data)
-        
     
 
-        
-if __name__ == "__main__":
-    #suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
-    #unittest.TextTestRunner(verbosity=2).run(suite)
-    #suite = unittest.TestLoader().loadTestsFromTestCase(Cc)
-    #unittest.TextTestRunner(verbosity=2).run(suite)
-    pass
     
+class TileSolutionTest(unittest.TestCase):
+
+
+    def setUp(self):
+    
+        SOLUTION, TILES = import_data()
+        
+        self.solution = Solution(s = SOLUTION, _Y = 12, _X = 18)
+        self.tiles = TILES
+        self.tiledims =  (2,2,6,3)
+        
+        #tilenum,tileside,x,y,z,flip
+        self.play0 = play(tilenum=0,tileside=0,x=0,y=0,z=0,flip=0)
+        
+        
+    def test_1_tiledot_hardcoded(self):
+    
+        tile1 = self.tiles[0][0]
+        p1 = self.play1 = play(flip=0, 
+                               z = 0,
+                               tilenum = self.play0.tilenum,
+                               tileside = self.play0.tileside,
+                               x = self.play0.x,
+                               y = self.play0.y
+                                )
+        x,y = 0,0
+
+        ret = self.solution.get_tile_dot(tile1,p1,x,y)        
+        self.assertEqual(ret,1)
+
+    def test_2_match_tile_rejects_offboard(self):
+    
+        self.assertTrue(True)
+        
+        #this hangs over the right side of the board
+        p1 = self.play1 = play( 
+                               tilenum = 4,
+                               tileside = 1,
+                               x = 15,
+                               y = 0,
+                               z = self.play0.z,
+                               flip  =self.play0.flip
+                                )
+        
+        ret = self.solution.match_tile_to_board(self.tiles,p1)
+        self.assertFalse(ret)
+        
+        #this hangs matches the board, all zeros off in the corner
+        p1 = self.play1 = play( 
+                               tilenum = 4,
+                               tileside = 1,
+                               x = 14,
+                               y = 0,
+                               z = 1,
+                               flip  = self.play0.flip
+                                )
+        
+        ret = self.solution.match_tile_to_board(self.tiles,p1)
+        self.assertTrue(ret)
+        
+        
+        
+
 
 def main():
-    #s  = SearchData()
-    #print s.x
+
+    suite = unittest.TestLoader().loadTestsFromTestCase(ScratchTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)
     
-    #pp = PreProc()
-    #print 'ppcombos', str(pp.combos)
+    suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
+    unittest.TextTestRunner(verbosity=2).run(suite)
     
-    if False:
-        unittest.main()
-        #pass
-    else:
-        suite = unittest.TestLoader().loadTestsFromTestCase(ScratchTest)
-        unittest.TextTestRunner(verbosity=2).run(suite)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TileSolutionTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)
         
-        suite = unittest.TestLoader().loadTestsFromTestCase(PreprocTests)
-        unittest.TextTestRunner(verbosity=2).run(suite)
-        
-    return 1
 

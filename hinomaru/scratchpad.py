@@ -10,6 +10,11 @@ print a
 play = playHolder()
 p1 = play(1,2,3,4,5,6)
 
+from utils.types import tileHolder, playHolder
+play = playHolder()
+p2 = play(flip=10,tilenum=1,tileside=1,x=1,y=0,z=0)
+print p2
+
 class MyClass:
     def hello(self):
         print 'World'
