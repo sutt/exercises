@@ -1,5 +1,6 @@
 import os,sys, copy
 from utils import Board
+from utils import Log
 
 class Play:
 
@@ -9,9 +10,6 @@ class Play:
         self.player = 1
         self.state = state
         self.extra = False
-
-    def reset_state(self):
-        self.state = copy.copy(self.state)
 
     def get_column(self,column):
         return [self.state[row][column] for row in range(self.board.width)] 

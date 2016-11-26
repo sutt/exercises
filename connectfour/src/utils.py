@@ -61,16 +61,20 @@ class Log:
         print out
 
 
-    def game_draw(self, noisy = False):
+    def game_tie(self, noisy = False):
         
         self.game['win_bool']
         if noisy or self.noisy:
-            print 'Game Ends in Draw at i: ', str(self.game_i)
+            print 'Game Ends in Draw at turn: ', str(self.game.get('count_turn','TURN_UNKNOWN'))
+
+    def game_play(self, noisy = False):
+
+        self.game['count_turn'] += 1
 
     def game_win(self, win_state = None, noisy = False):
 
         if noisy or self.noisy:
-            print 'WINNING at i:', str(self.game.get('win_turns', 'TURN_UNKNOWN'))
+            print 'WINNING at turn:', str(self.game.get('count_turn', 'TURN_UNKNOWN'))
             if win_state is not None:
                 self.print_board(win_state)
 

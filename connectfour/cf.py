@@ -23,11 +23,12 @@ def main():
             #ACTION-SPACE
             ap = play.available_plays()
             if len(ap) < 1:
-                log.game_draw()
+                log.game_tie()
                 break
             
             #DECISION-ACTION
             play.make_play(random.sample(ap,1)[0])
+            log.game_play()
 
             #OBSERVE
             if play.check_win():    #this writes to log too
