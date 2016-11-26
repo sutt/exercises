@@ -5,31 +5,39 @@ from src.play import Play
 
 BOARD_WIDTH = 8
 BOARD_HEIGHT = 8
-STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]  
+#INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]  
+import copy
 
+# class Data:
+#     INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]
 
 def main():
-    #for i in range(PLAYS):
-    board = Board(BOARD_WIDTH,BOARD_HEIGHT)    
-    board.print_board(board_header = True)
+    
+    board = Board(BOARD_WIDTH,BOARD_HEIGHT)
+    INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]    
 
-    play = Play(board = board, state = STATE)
+    for game in range(10):
+        print "GAME: ", str(game)
+        
+        local_data = copy.deepcopy(INIT_STATE)
+        play = Play(board = board, state = local_data)
+        
+        for i in range(100):
+            
+            ap = play.available_plays()
+
+            if len(ap) < 1:
+                print 'Game Ends in Draw at i: ', str(i)
+                break
+
+            play.make_play(random.sample(ap,1)[0])
+
+            if play.check_win():
+                print 'WINNING at i:', str(i)
+                board.print_board(board_state = play.state[:], board_header = True)
+                break
 
     
-    for i in range(100):
-        
-        ap = play.available_plays(state = STATE)
-        
-        if len(ap) < BOARD_WIDTH:
-            print 'exiting i: ', str(i)
-            print 'Available Plays:'
-            print ap
-            break
-
-        play_1 = random.sample(ap,1)[0]
-        ret = play.make_play(play_1)
-        
-    board.print_board(board_state = play.state[:], board_header = True)
 
 
 if __name__ == "__main__":

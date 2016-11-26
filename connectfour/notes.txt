@@ -4,3 +4,10 @@ ctrl+q : focusTerminal (when Editor focus)
 
 Dash the robot - learning for kids
 https://store.makewonder.com/#/robots
+
+VERY IMPORTANT 
+ - for 1-time declared list/nested-lists 
+ - used in multiple re-instantiated classes inside a loop
+    
+    import copy
+    byval_list = copy.deepcopy(list)
