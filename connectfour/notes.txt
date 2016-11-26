@@ -1,0 +1,6 @@
+ctrl+0 : focusSidebar
+ctrl+b : toggleViz Sidebar
+ctrl+q : focusTerminal (when Editor focus)
+
+Dash the robot - learning for kids
+https://store.makewonder.com/#/robots

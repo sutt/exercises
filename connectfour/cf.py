@@ -1,36 +1,35 @@
 import os, sys, random
 
-print 'connect four'
+from src.utils import Board
+from src.play import Play
 
 BOARD_WIDTH = 8
 BOARD_HEIGHT = 8
-
-def print_board(**kwargs):
-    
-    _blank, _X, _O = "~", "X", "O"
-    
-    lines = [ list(_blank * BOARD_WIDTH) for _ in range(BOARD_HEIGHT)]
-    
-    state = kwargs.get('board_state',[])
-    
-    if len(state) != 0:
-        #lines = process_state(lines,_X,_O)
-        pass 
-    
-    out = ""
-    
-    if kwargs.get('board_header',False):
-        out += " ".join([str(i) for i in range(BOARD_WIDTH)]) 
-        out += "\n"
-
-    for line in lines:
-        out += " ".join(line) + "\n"
-    print out
+STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]  
 
 
 def main():
-    #for i in range(PLAYS):    
-    print_board(board_header = True)
+    #for i in range(PLAYS):
+    board = Board(BOARD_WIDTH,BOARD_HEIGHT)    
+    board.print_board(board_header = True)
+
+    play = Play(board = board, state = STATE)
+
+    
+    for i in range(100):
+        
+        ap = play.available_plays(state = STATE)
+        
+        if len(ap) < BOARD_WIDTH:
+            print 'exiting i: ', str(i)
+            print 'Available Plays:'
+            print ap
+            break
+
+        play_1 = random.sample(ap,1)[0]
+        ret = play.make_play(play_1)
+        
+    board.print_board(board_state = play.state[:], board_header = True)
 
 
 if __name__ == "__main__":
