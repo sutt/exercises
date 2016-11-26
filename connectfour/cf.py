@@ -32,9 +32,10 @@ def main():
 
             play.make_play(random.sample(ap,1)[0])
 
-            if play.check_win():
-                print 'WINNING at i:', str(i)
-                board.print_board(board_state = play.state[:], board_header = True)
+            if play.check_win(play = i):
+                if play.extra:  #a diag-win
+                    print 'WINNING at i:', str(i)
+                    board.print_board(board_state = play.state[:], board_header = True)
                 break
 
     

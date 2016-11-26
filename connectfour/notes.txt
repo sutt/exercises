@@ -1,6 +1,8 @@
 ctrl+0 : focusSidebar
 ctrl+b : toggleViz Sidebar
-ctrl+q : focusTerminal (when Editor focus)
+ctrl+q : focusTerminal (when Editor focus) [custom]
+
+cntrl+shift+y : view debug console
 
 Dash the robot - learning for kids
 https://store.makewonder.com/#/robots
@@ -11,3 +13,6 @@ VERY IMPORTANT
     
     import copy
     byval_list = copy.deepcopy(list)
+
+Mintty (Git Bash Rainbow)
+To Scroll: Shift + Up / Down [PgUp / PgDown]
