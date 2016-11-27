@@ -4,6 +4,9 @@ ctrl+q : focusTerminal (when Editor focus) [custom]
 
 cntrl+shift+y : view debug console
 
+ctrl+\ : split editor
+ctrl+w : close second editor
+
 Mintty (Git Bash Rainbow)
 To Scroll: Shift + Up / Down [PgUp / PgDown]
 
@@ -21,6 +24,7 @@ Build a Log-Class and pass it into significant funtions:
      Game.method(log = instanceLog)
 
      Use __init__ to build a dict of the data you want to track through the programs
+     append an inner-loop's worth of data to a running tally in the outer-loop, then reset this data inner data
 
 
 

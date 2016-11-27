@@ -22,8 +22,8 @@ class Log:
         self.games = []
 
         self.noisy = noisy
-        self.record = False
-        self.persist = False
+        self.record = True
+        self.persist = True
 
     
     def reset_game(self):
@@ -58,10 +58,30 @@ class Log:
             out += " ".join(line) + "\n"
         print out
 
+    def persist_to_file(self,data,**kwargs):
+
+        def new_output(all_files):
+            i = 1
+            f_prefix = "output"
+            while True:
+                fn = f_prefix + str(i) + ".txt"
+                if fn in all_files:
+                    i += 1
+                else:
+                    return fn
+
+        datadir = os.path.join( os.getcwd(), 'data')
+        all_files = os.listdir(datadir)
+        fn = new_output(all_files)
+        fnpath = os.path.join( os.getcwd(), 'data', fn )
+
+        f = open(fnpath,'w')
+        f.writelines(str(data))
+        f.close()
 
     def game_tie(self, noisy = False):
         
-        self.game['win_bool']
+        self.game['win_bool'] = False
         if noisy or self.noisy:
             print 'Game Ends in Draw at turn: ', str(self.game.get('count_turn','TURN_UNKNOWN'))
 
@@ -75,6 +95,9 @@ class Log:
 
         self.game['win_player'] = player
         self.game['win_type'] = win_type
+        self.game['win_type_ind'] = win_type_ind 
+        self.game['win_bool'] = True
+        self.game['win_turns'] = self.game['count_turn']
 
         if noisy or self.noisy:
             
@@ -102,7 +125,7 @@ class Log:
             self.game['t'] = self.game['t1'] - self.game['t0']
 
         if self.record:
-            self.games.append(game)
+            self.games.append(self.game)
 
         if noisy or self.noisy:
             pass        
@@ -111,7 +134,8 @@ class Log:
         print 'ENDING -----'
         if self.persist:
             #writes games to file as json
-            pass
+            self.persist_to_file(data = self.games)
+            
 
 
     
