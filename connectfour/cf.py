@@ -31,8 +31,8 @@ def main():
             log.game_play()
 
             #OBSERVE
-            if play.check_win():    #this writes to log too
-                log.game_win(win_state = play.state)    
+            if play.check_win(log = log):    #this writes to log too
+                log.game_win_print(win_state = play.state)    
                 break
 
         log.game_end()

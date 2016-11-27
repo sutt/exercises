@@ -9,12 +9,10 @@ game['count_turn'] = None
 game['win_bool'] = None
 game['win_turns'] = None
 game['win_type'] = None
-game['player_win'] = None
+game['win_player'] = None
 
 
 class Log:
-    
-    
 
 
     def __init__(self, noisy = False, **kwargs):
@@ -67,14 +65,32 @@ class Log:
         if noisy or self.noisy:
             print 'Game Ends in Draw at turn: ', str(self.game.get('count_turn','TURN_UNKNOWN'))
 
+
     def game_play(self, noisy = False):
 
         self.game['count_turn'] += 1
 
-    def game_win(self, win_state = None, noisy = False):
+
+    def game_win(self, player = None, win_type = None, win_type_ind = None, noisy = False):
+
+        self.game['win_player'] = player
+        self.game['win_type'] = win_type
 
         if noisy or self.noisy:
+            
+            s_win_type = 'unknown' if win_type is None else str(win_type)
+            s_win_type_ind = 'unknown' if win_type_ind is None else str(win_type_ind)
+            s_player = str(player)
+
+            print 'ConnectFour at ', s_win_type, ' ', s_win_type_ind, ' by Player ', s_player
+
+
+    def game_win_print(self, win_state = None, noisy = False):
+
+        if noisy or self.noisy:
+
             print 'WINNING at turn:', str(self.game.get('count_turn', 'TURN_UNKNOWN'))
+            
             if win_state is not None:
                 self.print_board(win_state)
 
