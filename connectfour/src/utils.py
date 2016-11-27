@@ -25,9 +25,6 @@ class Log:
         self.record = True
         self.persist = True
 
-    
-    def reset_game(self):
-        pass
 
     def game_start(self, game_i = None, noisy = False ):
         
@@ -78,6 +75,26 @@ class Log:
         f = open(fnpath,'w')
         f.writelines(str(data))
         f.close()
+
+    def load_from_file(self,filename,**kwargs):
+
+        datadir = os.path.join( os.getcwd(), 'data')
+        all_files = os.listdir(datadir)
+        fnpath = os.path.join('data', filename)
+        f = open(fnpath,'r')
+        inp_str = f.read()
+        f.close()
+        data = eval(inp_str)
+
+        return data
+
+    def get_stat(self,data,stat):
+
+        ret = []
+        for elem in data:
+            ret.append(elem.get(stat))
+        
+        return ret
 
     def game_tie(self, noisy = False):
         
