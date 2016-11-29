@@ -8,6 +8,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--analytics", action="store_true", default=False)
 ap.add_argument("--stat", default='t')
 ap.add_argument("--readfile", default="")
+ap.add_argument("--pct_analytics", default ="")
 ap.add_argument("--runs", default = 10)
 args = vars(ap.parse_args())
 
@@ -18,9 +19,9 @@ INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]
 def batch():
     
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
-    log = Log(noisy = True)
+    log = Log(noisy = False)
 
-    for game_i in range(args['runs']):
+    for game_i in range(int(args['runs'])):
         
         log.game_start(game_i = game_i)       
         play = Play(board = board, state = copy.deepcopy(INIT_STATE))
@@ -63,10 +64,19 @@ def analytics(**kwargs):
     _min, _max = min(stat_v), max(stat_v)
     
     print 'Var: ', str(stat_str.upper())
-    print 'N: ', str(len(stat))
+    print 'N: ', str(len(stat_v))
     print 'Avg: ',  str(avg)[:5]
     print 'Min: ', str(_min), ' Max: ', str(_max)
 
+    if len(args['pct_analytics']) > 0:
+
+        match = str(args['pct_analytics'])
+
+        num_match = [str(x) for x in stat_v].count(match)
+
+        pct_match = 100.0 * float(num_match) / float(len(stat_v))
+
+        print 'PCT of ', stat_str, ' = ', match , ' : ', str(pct_match)[:5]
 
 if __name__ == "__main__":
     if args['analytics']: 

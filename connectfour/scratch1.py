@@ -10,6 +10,8 @@ if False:
 
 loaded = json.load(open('data/output2.txt','r'))
 
+#aster)
+#$ python cf.py --analytics --readfile output1.txt --stat win_player --pct_analytics 1
 
 
 def new_output(all_files):
