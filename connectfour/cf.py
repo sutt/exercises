@@ -3,6 +3,7 @@ import os, sys, random, copy, time, argparse
 from src.utils import Board
 from src.play import Play
 from src.utils import Log
+from src.strategy import KnownRules
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--analytics", action="store_true", default=False)
@@ -20,6 +21,7 @@ def batch():
     
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
     log = Log(noisy = False)
+    strart = KnownRules(players = (1,2), c3me = True, c3you = False)
 
     for game_i in range(int(args['runs'])):
         
