@@ -4,10 +4,10 @@ from utils import Log
 
 class Play:
 
-    def __init__(self,board,state):
+    def __init__(self,board,state, **kwargs):
         """ """
         self.board = board 
-        self.player = 1
+        self.player = kwargs.get('player_init', 1)
         self.state = state
         self.extra = False
 
@@ -33,12 +33,13 @@ class Play:
                 plays.append(irow)
         return plays
 
-    def make_play(self,play_row):
+    def make_play(self,play_row,**kwargs):
         
         player = self.player
         self.state[self.column_height(play_row)][play_row] = player
-
-        self.player = 1 if player == 2 else 2
+        
+        if kwargs.get('switch_player', True):
+            self.player = 1 if player == 2 else 2
 
         return 1
     

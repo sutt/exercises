@@ -20,8 +20,8 @@ INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]
 def batch():
     
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
-    log = Log(noisy = False)
-    strart = KnownRules(players = (1,2), c3me = True, c3you = False)
+    log = Log(noisy = True)
+    strat = KnownRules(players = (1,2), c3me = True, c3you = False)
 
     for game_i in range(int(args['runs'])):
         
@@ -35,12 +35,16 @@ def batch():
             if len(ap) < 1:
                 log.game_tie()
                 break
-            
+
             #DECISION-ACTION
-            play.make_play(random.sample(ap,1)[0])
+            ret_strat = strat.test_connect_three_me( play, board, log )
+            playcol = ret_strat if ret_strat > -1 else random.sample(ap,1)[0]
+            play.make_play(playcol)
+            if ret_strat > -1:
+                print 'STRAT! turn ', str(log.game['count_turn']), ' col ', str(playcol), ' player ', str(play.player)
             log.game_play()
 
-            #OBSERVE
+            #EVAL-PAYOFF-FUNCTION
             if play.check_win(log = log):    #this writes to log too
                 log.game_win_print(win_state = play.state)    
                 break
