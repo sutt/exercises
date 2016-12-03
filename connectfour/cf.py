@@ -3,7 +3,7 @@ import os, sys, random, copy, time, argparse
 from src.utils import Board
 from src.play import Play
 from src.utils import Log
-from src.strategy import KnownRules
+from src.strategy import KnownRules   #add .find_fork - this should open game back up
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--analytics", action="store_true", default=False)
@@ -21,7 +21,7 @@ def batch():
     
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
     log = Log(noisy = True)
-    strat = KnownRules(players = (1,2), c3me = True, c3you = False)
+    strat = KnownRules(players = (1,2), c3me = True, c3you = True)
 
     for game_i in range(int(args['runs'])):
         
@@ -37,9 +37,16 @@ def batch():
                 break
 
             #DECISION-ACTION
-            ret_strat = strat.test_connect_three_me( play, board, log )
+            ret_strat_1 = strat.test_connect_three_me( play, board, log )
+            ret_strat_2 = strat.test_connect_three_you( play, board, log )  #if you have to block multiple youre done
+
+            ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2)) 
+            
+            log.strat_played(ret_strat, play, strat_type = strat_type, noisy = True)
+            
             playcol = ret_strat if ret_strat > -1 else random.sample(ap,1)[0]
-            log.strat_played(ret_strat, play, noisy = True)
+
+
             play.make_play(playcol)
             log.game_play()
 

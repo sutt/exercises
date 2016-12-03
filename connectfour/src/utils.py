@@ -106,16 +106,18 @@ class Log:
         if noisy or self.noisy:
             print 'Game Ends in Draw at turn: ', str(self.game.get('count_turn','TURN_UNKNOWN'))
     
-    def strat_played(self, ret_strat,current_play, noisy=False):
+    def strat_played(self, ret_strat,current_play, strat_type = "", noisy=False):
         
         if ret_strat > -1:
                 
             self.game['strat_found'] =  {'turn': self.game.get('count_turn', None)
                                          ,'player': copy.copy(current_play.player)
-                                         ,'stratcol': ret_strat }
+                                         ,'stratcol': ret_strat
+                                         ,'type': strat_type }
             
             if noisy:
-                print 'STRAT! turn ', str(self.game.get('count_turn', "unknown")), \
+                print 'STRAT type ', str(strat_type), \
+                      ' turn ', str(self.game.get('count_turn', "unknown")), \
                       ' col ',str(ret_strat) , \
                       ' player ', str(copy.copy(current_play.player))
         

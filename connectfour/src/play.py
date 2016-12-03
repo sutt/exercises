@@ -60,14 +60,14 @@ class Play:
             row = self.state[i][:]        
             if self.four(row):
                 player = self.four(row,ret_bool=False)
-                log.game_win(player = player, win_type = 'row', win_type_ind = i)
+                if log is not None: log.game_win(player = player, win_type = 'row', win_type_ind = i)
                 return True
 
         for i in range(self.board.height):
             col = self.get_column(i)[:]
             if self.four(col):        
                 player =  self.four(col,ret_bool=False)
-                log.game_win(player = player, win_type = 'col', win_type_ind = i)
+                if log is not None: log.game_win(player = player, win_type = 'col', win_type_ind = i)
                 return True
 
         #mirror image horizontally "left-to-right" flip, check the diagonals again
@@ -86,7 +86,7 @@ class Play:
                 if len(diag) >= 4:
                     if self.four(diag):
                         player = self.four(diag, ret_bool = False)
-                        log.game_win(player = player, win_type = 'diag_a', win_type_ind = i)
+                        if log is not None: log.game_win(player = player, win_type = 'diag_a', win_type_ind = i)
                         return True
                                         
             #diagonals bottom-left is bottom-row
@@ -96,7 +96,7 @@ class Play:
                 if len(diag) >= 4:
                     if self.four(diag):
                         player = self.four(diag, ret_bool = False)
-                        log.game_win(player = player, win_type = 'diag_b', win_type_ind = i)
+                        if log is not None: log.game_win(player = player, win_type = 'diag_b', win_type_ind = i)
                         return True
         return False
     
