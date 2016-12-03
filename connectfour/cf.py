@@ -39,14 +39,12 @@ def batch():
             #DECISION-ACTION
             ret_strat_1 = strat.test_connect_three_me( play, board, log )
             ret_strat_2 = strat.test_connect_three_you( play, board, log )  #if you have to block multiple youre done
-
+            #recursive-me-you-me-you...?
             ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2)) 
             
             log.strat_played(ret_strat, play, strat_type = strat_type, noisy = True)
             
             playcol = ret_strat if ret_strat > -1 else random.sample(ap,1)[0]
-
-
             play.make_play(playcol)
             log.game_play()
 

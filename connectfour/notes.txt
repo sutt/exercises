@@ -27,6 +27,8 @@ Build a Log-Class and pass it into significant funtions:
      append an inner-loop's worth of data to a running tally in the outer-loop, then reset this data inner data
 
 
+Cool Portfolio of Code/Viz
+http://roadtolarissa.com/
 
 Dash the robot - learning for kids
 https://store.makewonder.com/#/robots
