@@ -26,3 +26,15 @@ Recipes:
 	>git pull origin master
 	>git stash pop
 		http://stackoverflow.com/questions/15745045/how-do-i-resolve-git-saying-commit-your-changes-or-stash-them-before-you-can-me
+        
+Notes:
+
+    https://sidbala.com/h-264-is-magic/
+    https://news.ycombinator.com/item?id=12871403
+    
+    "This is exactly what H.264 does. H.264 splits up the image into macro-blocks - typically 16x16 pixel blocks that it will use for motion estimation. It encodes one static image - typically called an I-frame(Intra frame). This is a full frame - containing all the bits it required to construct that frame. And then subsequent frames are either P-frames(predicted) or B-frames(bi-directionally predicted). P-frames are frames that will encode a motion vector for each of the macro blocks from the previous frame. So a P-frame has to be constructed by the decoder based on previous frames. "
+
+    https://hbr.org/2016/11/the-competitive-landscape-for-machine-intelligence
+    
+        https://github.com/Microsoft/CNTK https://www.microsoft.com/en-us/research/product/cognitive-toolkit
+        http://www.kyndi.com/
