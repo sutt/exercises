@@ -10,7 +10,7 @@ ap.add_argument("--analytics", action="store_true", default=False)
 ap.add_argument("--stat", default='t')
 ap.add_argument("--readfile", default="")
 ap.add_argument("--pct_analytics", default ="")
-ap.add_argument("--runs", default = 10)
+ap.add_argument("--runs", default = 1)
 args = vars(ap.parse_args())
 
 BOARD_WIDTH = 8
@@ -39,9 +39,8 @@ def batch():
             #DECISION-ACTION
             ret_strat = strat.test_connect_three_me( play, board, log )
             playcol = ret_strat if ret_strat > -1 else random.sample(ap,1)[0]
+            log.strat_played(ret_strat, play, noisy = True)
             play.make_play(playcol)
-            if ret_strat > -1:
-                print 'STRAT! turn ', str(log.game['count_turn']), ' col ', str(playcol), ' player ', str(play.player)
             log.game_play()
 
             #EVAL-PAYOFF-FUNCTION

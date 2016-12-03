@@ -10,6 +10,7 @@ game['win_bool'] = None
 game['win_turns'] = None
 game['win_type'] = None
 game['win_player'] = None
+game['strat_found'] = None
 
 
 class Log:
@@ -76,6 +77,9 @@ class Log:
         f.writelines(str(data))
         f.close()
 
+        if kwargs.get('noisy',False):
+            print 'Saving to data/', str(fn)
+
     def load_from_file(self,filename,**kwargs):
 
         datadir = os.path.join( os.getcwd(), 'data')
@@ -101,6 +105,20 @@ class Log:
         self.game['win_bool'] = False
         if noisy or self.noisy:
             print 'Game Ends in Draw at turn: ', str(self.game.get('count_turn','TURN_UNKNOWN'))
+    
+    def strat_played(self, ret_strat,current_play, noisy=False):
+        
+        if ret_strat > -1:
+                
+            self.game['strat_found'] =  {'turn': self.game.get('count_turn', None)
+                                         ,'player': copy.copy(current_play.player)
+                                         ,'stratcol': ret_strat }
+            
+            if noisy:
+                print 'STRAT! turn ', str(self.game.get('count_turn', "unknown")), \
+                      ' col ',str(ret_strat) , \
+                      ' player ', str(copy.copy(current_play.player))
+        
 
 
     def game_play(self, noisy = False):
@@ -151,7 +169,7 @@ class Log:
         print 'ENDING -----'
         if self.persist:
             #writes games to file as json
-            self.persist_to_file(data = self.games)
+            self.persist_to_file(data = self.games, noisy = True)
             
 
 
