@@ -40,6 +40,11 @@ class Log:
         if noisy or self.noisy:
             print "GAME: ", str(game_i)
 
+    def batch_strat_params(self, obj_strat):
+
+        self.batch_strat = {}
+        self.batch_strat['connect_three_me'] = obj_strat.connect_three_me
+        self.batch_strat['connect_three_you'] = obj_strat.connect_three_you
 
     def print_board(self, state):
     

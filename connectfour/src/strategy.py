@@ -9,13 +9,12 @@ class KnownRules:
     def __init__(self, players = (1,2), **kwargs ):
         
         self.players = players    # which players to apply the rules to
-        self.connect_three_me = kwargs.get('c3me', False)
-        self.connect_three_you = kwargs.get('c3you', False)
+        self.connect_three_me = kwargs.get('c3me', (0,0))
+        self.connect_three_you = kwargs.get('c3you', (0,0))
 
     def test_connect_three_me(self,current_play, passin_board, passin_log, **kwargs):
         
-        if not(self.test_connect_three_me): return False
-        if not( current_play.player in self.players): return False
+        if not( current_play.player in self.connect_three_me): return -1
 
         temp_log = Log(noisy = False)
         available_plays = current_play.available_plays()
@@ -37,8 +36,7 @@ class KnownRules:
                 
     def test_connect_three_you(self,current_play, passin_board, passin_log, **kwargs):
         
-        if not(self.test_connect_three_you): return False
-        if not( current_play.player in self.players): return False
+        if not( current_play.player in self.connect_three_you): return -1
 
         temp_log = Log(noisy = False)
         available_plays = current_play.available_plays()

@@ -11,6 +11,9 @@ ap.add_argument("--stat", default='t')
 ap.add_argument("--readfile", default="")
 ap.add_argument("--pct_analytics", default ="")
 ap.add_argument("--runs", default = 1)
+ap.add_argument("--strat_me", default = "(0,0)") #action="store_true", default=False)
+ap.add_argument("--strat_you", default = "(0,0)") #action="store_true", default=False)
+ap.add_argument("--strat_players", default="(1,2)")
 args = vars(ap.parse_args())
 
 BOARD_WIDTH = 8
@@ -20,8 +23,11 @@ INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]
 def batch():
     
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
-    log = Log(noisy = True)
-    strat = KnownRules(players = (1,2), c3me = True, c3you = True)
+    log = Log(noisy = False)
+    #me, you = eval(args['strats'])
+    strat = KnownRules(players = eval(args['strat_players']), \
+                      c3me = eval(args['strat_me']), c3you = eval(args['strat_you']))
+    log.batch_strat_params( strat )
 
     for game_i in range(int(args['runs'])):
         
@@ -42,9 +48,9 @@ def batch():
             #recursive-me-you-me-you...?
             ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2)) 
             
-            log.strat_played(ret_strat, play, strat_type = strat_type, noisy = True)
+            log.strat_played(ret_strat, play, strat_type = strat_type, noisy = False)
             
-            playcol = ret_strat if ret_strat > -1 else random.sample(ap,1)[0]
+            playcol = ret_strat if int(ret_strat) > -1 else random.sample(ap,1)[0]
             play.make_play(playcol)
             log.game_play()
 
@@ -59,6 +65,10 @@ def batch():
 
 
 def analytics(**kwargs):
+
+    # python cf.py --analytics --readfile output12.txt --stat t
+    # python cf.py --analytics --readfile output12.txt --stat win_player --pct_analytics 1
+    # python cf.py --runs 300 --strat_player (1,) --strat_me --strat_you
 
     log = Log(noisy = False)
     data = log.load_from_file(filename = args['readfile'] ) 
