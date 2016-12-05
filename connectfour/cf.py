@@ -5,14 +5,18 @@ from src.play import Play
 from src.utils import Log
 from src.strategy import KnownRules   #add .find_fork - this should open game back up
 
+#For debugging 
+def_arg = "(0,0)"
+def_arg = "(1,2)"
+
 ap = argparse.ArgumentParser()
 ap.add_argument("--analytics", action="store_true", default=False)
 ap.add_argument("--stat", default='t')
 ap.add_argument("--readfile", default="")
 ap.add_argument("--pct_analytics", default ="")
 ap.add_argument("--runs", default = 1)
-ap.add_argument("--strat_me", default = "(0,0)") #action="store_true", default=False)
-ap.add_argument("--strat_you", default = "(0,0)") #action="store_true", default=False)
+ap.add_argument("--strat_me", default = def_arg) #action="store_true", default=False)
+ap.add_argument("--strat_you", default = def_arg) #action="store_true", default=False)
 ap.add_argument("--strat_players", default="(1,2)")
 args = vars(ap.parse_args())
 
@@ -44,9 +48,9 @@ def batch():
 
             #DECISION-ACTION
             ret_strat_1 = strat.test_connect_three_me( play, board, log )
-            ret_strat_2 = strat.test_connect_three_you( play, board, log )  #if you have to block multiple youre done
-            #recursive-me-you-me-you...?
-            ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2)) 
+            ret_strat_2 = strat.test_connect_three_you( play, board, log ) 
+            ret_strat_3 = strat.test_fork_me( play, board, log )
+            ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2, ret_strat_3)) 
             
             log.strat_played(ret_strat, play, strat_type = strat_type, noisy = False)
             
@@ -56,7 +60,7 @@ def batch():
 
             #EVAL-PAYOFF-FUNCTION
             if play.check_win(log = log):    #this writes to log too
-                log.game_win_print(win_state = play.state)    
+                log.game_win_print(win_state = play.state, noisy = True)    
                 break
 
         log.game_end()

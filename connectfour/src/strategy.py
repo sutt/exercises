@@ -1,4 +1,8 @@
-import os,sys,time,random, copy
+import copy
+import os
+import random
+import sys
+import time
 
 from play import Play
 from utils import Log
@@ -11,6 +15,8 @@ class KnownRules:
         self.players = players    # which players to apply the rules to
         self.connect_three_me = kwargs.get('c3me', (0,0))
         self.connect_three_you = kwargs.get('c3you', (0,0))
+        self.fork_me = kwargs.get('forkme', (1,2))
+        self.fork_you = kwargs.get('forkyou', (0,0))
 
     def test_connect_three_me(self,current_play, passin_board, passin_log, **kwargs):
         
@@ -44,6 +50,7 @@ class KnownRules:
         current_player = copy.copy(current_play.player)
         other_player = 1 if current_player == 2 else 2 
 
+        list_blocking_plays = []
         for play_col_i in range(current_play.board.width):
             
             temp_play = Play(board = passin_board, \
@@ -55,22 +62,56 @@ class KnownRules:
             temp_play.make_play(play_col_i, switch_player = False)
 
             if temp_play.check_win(log = None):
-                return  play_col_i
+                list_blocking_plays.append(play_col_i)
+
+        if len(list_blocking_plays) > 0:
+            if kwargs.get('ret_multi',False):
+                return list_blocking_plays
+            else:
+                return list_blocking_plays[0]
+        
+        return -1
+
+
+    def test_fork_me(self, current_play, passin_board, log, **kwargs):
+        """ this looks for forks you can play, where you create two connect3's simulatenously"""
+
+        if not( current_play.player in self.fork_me): return -1
+
+        for play_col_i in range(current_play.board.width):
             
+            temp_play = Play(board = passin_board, \
+                             state = copy.deepcopy(current_play.state), \
+                             player_init = copy.copy(current_play.player))
+            
+            available_plays = current_play.available_plays()
+            if not(play_col_i in available_plays): continue
+            
+            temp_play.make_play(play_col_i, switch_player = True)
+
+            blocking_cols = self.test_connect_three_you(temp_play,passin_board, log, ret_multi = True)
+            
+            if blocking_cols == -1: return -1
+            
+            if len(blocking_cols) > 1:
+                print 'Found a Fork'
+                return play_col_i
+
         return -1
 
     def final_strat(self,iter_strats, **kwargs):
         
         ret_strat_1, ret_strat_2 = iter_strats[0], iter_strats[1] 
-        
+        if len(iter_strats) > 2: ret_strat_3 = iter_strats[2]
+
         ret_strat = -1 
 
         if ret_strat_1 > -1:
             return (ret_strat_1, 'Winner')
         elif ret_strat_2 > -1:
             return (ret_strat_2, 'Block')
+        elif ret_strat_3 > -1:
+            return (ret_strat_3, 'Fork')
+
 
         return (ret_strat, None)
-
-    
-
