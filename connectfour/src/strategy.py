@@ -91,10 +91,11 @@ class KnownRules:
 
             blocking_cols = self.test_connect_three_you(temp_play,passin_board, log, ret_multi = True)
             
-            if blocking_cols == -1: return -1
+            if blocking_cols == -1: continue
             
             if len(blocking_cols) > 1:
-                print 'Found a Fork'
+                print 'Found a Fork at turn ', str(log.game['count_turn'])
+                print '  player ', str(current_play.player), ' Col: ', str(play_col_i)
                 return play_col_i
 
         return -1
@@ -104,14 +105,17 @@ class KnownRules:
         ret_strat_1, ret_strat_2 = iter_strats[0], iter_strats[1] 
         if len(iter_strats) > 2: ret_strat_3 = iter_strats[2]
 
-        ret_strat = -1 
+        ret_col = -1
+        ret = (ret_col,None) 
 
         if ret_strat_1 > -1:
-            return (ret_strat_1, 'Winner')
+            ret =  (ret_strat_1, 'Winner')
         elif ret_strat_2 > -1:
-            return (ret_strat_2, 'Block')
+            ret =  (ret_strat_2, 'Block')
         elif ret_strat_3 > -1:
-            return (ret_strat_3, 'Fork')
+            ret =  (ret_strat_3, 'Fork')
 
+        if kwargs.get('noisy',False):
+            print 'Strat: ', str(ret)
 
-        return (ret_strat, None)
+        return ret

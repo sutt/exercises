@@ -30,7 +30,9 @@ def batch():
     log = Log(noisy = False)
     #me, you = eval(args['strats'])
     strat = KnownRules(players = eval(args['strat_players']), \
-                      c3me = eval(args['strat_me']), c3you = eval(args['strat_you']))
+                                      c3me = eval(args['strat_me']), \
+                                      c3you = eval(args['strat_you']) \
+                                       )
     log.batch_strat_params( strat )
 
     for game_i in range(int(args['runs'])):
@@ -47,10 +49,13 @@ def batch():
                 break
 
             #DECISION-ACTION
+            #print  str(play.player)
             ret_strat_1 = strat.test_connect_three_me( play, board, log )
             ret_strat_2 = strat.test_connect_three_you( play, board, log ) 
-            ret_strat_3 = strat.test_fork_me( play, board, log )
-            ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2, ret_strat_3)) 
+            ret_strat_3 = -1
+            if ret_strat_1 == -1 and ret_strat_2 == -1:
+                ret_strat_3 = strat.test_fork_me( play, board, log )
+            ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2, ret_strat_3), noisy = False) 
             
             log.strat_played(ret_strat, play, strat_type = strat_type, noisy = False)
             
