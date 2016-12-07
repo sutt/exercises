@@ -21,9 +21,11 @@ class Log:
         #list of each game in a batch-loop        
         self.games = []
         self.strats = []
-        self.plays = []
+        self.moves = []
 
         self.game = copy.copy(game)
+        self.strat = None
+        self.move = []
 
         #settings
         self.noisy = noisy
@@ -37,6 +39,8 @@ class Log:
     def game_start(self, game_i = None, noisy = False ):
         
         self.game = copy.copy(game)    #reset
+        self.strat = None
+        self.move = []
         
         self.game['count_turn'] = 0
 
@@ -48,10 +52,11 @@ class Log:
             print "GAME: ", str(game_i)
 
     def batch_strat_params(self, obj_strat):
-        """  ???? """
+        """  record strat used params """
         self.batch_strat = {}
         self.batch_strat['connect_three_me'] = obj_strat.connect_three_me
         self.batch_strat['connect_three_you'] = obj_strat.connect_three_you
+        self.batch_strat['connect_three_you'] = obj_strat.fork_me
 
     def print_board(self, state):
     
@@ -127,10 +132,10 @@ class Log:
         
         if self.record_strategy:
 
-            self.strats.append(  {'turn': _turn 
-                                        ,'player': _player 
-                                        ,'stratcol': _col
-                                        ,'type': _type } )
+            self.strat =  {'turn': _turn 
+                            ,'player': _player 
+                            ,'stratcol': _col
+                            ,'type': _type } 
             
         if noisy:            
             
@@ -150,7 +155,7 @@ class Log:
         
         if self.record_plays:
             this_play = (copy.copy(play.player), playcol)
-            self.plays.append(this_play)
+            self.move.append(this_play)
 
 
     def game_win(self, player = None, win_type = None, win_type_ind = None, noisy = False):
@@ -188,6 +193,8 @@ class Log:
 
         if self.record:
             self.games.append(self.game)
+            self.strats.append(self.strat)
+            self.moves.append(self.move)
 
         if noisy or self.noisy:
             pass        

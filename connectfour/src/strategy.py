@@ -15,7 +15,7 @@ class KnownRules:
         self.players = players    # which players to apply the rules to
         self.connect_three_me = kwargs.get('c3me', (0,0))
         self.connect_three_you = kwargs.get('c3you', (0,0))
-        self.fork_me = kwargs.get('forkme', (1,2))
+        self.fork_me = kwargs.get('forkme', (0,0))
         self.fork_you = kwargs.get('forkyou', (0,0))
 
     def test_connect_three_me(self,current_play, passin_board, passin_log, **kwargs):
@@ -94,8 +94,6 @@ class KnownRules:
             if blocking_cols == -1: continue
             
             if len(blocking_cols) > 1:
-                print 'Found a Fork at turn ', str(log.game['count_turn'])
-                print '  player ', str(current_play.player), ' Col: ', str(play_col_i)
                 return play_col_i
 
         return -1

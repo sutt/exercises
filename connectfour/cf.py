@@ -17,6 +17,7 @@ ap.add_argument("--pct_analytics", default ="")
 ap.add_argument("--runs", default = 1)
 ap.add_argument("--strat_me", default = def_arg) #action="store_true", default=False)
 ap.add_argument("--strat_you", default = def_arg) #action="store_true", default=False)
+ap.add_argument("--strat_fork", default = def_arg) #action="store_true", default=False)
 ap.add_argument("--strat_players", default="(1,2)")
 args = vars(ap.parse_args())
 
@@ -28,12 +29,13 @@ def batch():
     
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
     log = Log(noisy = False)
-    #me, you = eval(args['strats'])
-    strat = KnownRules(players = eval(args['strat_players']), \
-                                      c3me = eval(args['strat_me']), \
-                                      c3you = eval(args['strat_you']) \
+    
+    strat = KnownRules(players = eval(args['strat_players']) 
+                                      ,c3me = eval(args['strat_me']) 
+                                      ,c3you = eval(args['strat_you']) 
+                                      ,forkme = eval(args['strat_fork'])
                                        )
-    log.batch_strat_params( strat )
+    log.batch_strat_params(strat)
 
     for game_i in range(int(args['runs'])):
         
@@ -50,7 +52,7 @@ def batch():
 
             #DECISION-ACTION
             ret = strat.strategize(play,log,board) 
-            log.strat_played(ret, play, noisy = True )
+            log.strat_played(ret, play, noisy = False )
             
             playcol = ret[0] if int(ret[0]) > -1 else random.sample(ap,1)[0]
             log.game_play(playcol, play)
@@ -59,7 +61,7 @@ def batch():
 
             #EVAL-PAYOFF-FUNCTION
             if play.check_win(log = log):    #this writes to log too
-                log.game_win_print(win_state = play.state, noisy = True)    
+                log.game_win_print(win_state = play.state, noisy = False)    
                 break
 
         log.game_end()
@@ -72,6 +74,8 @@ def analytics(**kwargs):
     # python cf.py --analytics --readfile output12.txt --stat t
     # python cf.py --analytics --readfile output12.txt --stat win_player --pct_analytics 1
     # python cf.py --runs 300 --strat_player (1,) --strat_me --strat_you
+    # python cf.py --runs 300 --strat_fork (1,)
+    # python cf.py --analytics --readfile output91.txt --stat win_player --pct_analytics 1
 
     log = Log(noisy = False)
     data = log.load_from_file(filename = args['readfile'] ) 
