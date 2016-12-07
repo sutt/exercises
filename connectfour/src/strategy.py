@@ -115,7 +115,19 @@ class KnownRules:
         elif ret_strat_3 > -1:
             ret =  (ret_strat_3, 'Fork')
 
-        if kwargs.get('noisy',False):
-            print 'Strat: ', str(ret)
+        return ret
+
+    def strategize(self, play, log, board, **kwargs):
+
+        ret_strat_1 = self.test_connect_three_me( play, board, log )
+        ret_strat_2 = self.test_connect_three_you( play, board, log ) 
+        ret_strat_3 = -1
+        if ret_strat_1 == -1 and ret_strat_2 == -1:
+            ret_strat_3 = self.test_fork_me( play, board, log )
+        
+        ret_strat, strat_type = self.final_strat(iter_strats = (ret_strat_1, ret_strat_2, ret_strat_3), noisy = False)
+        
+        ret = (ret_strat, strat_type)
 
         return ret
+

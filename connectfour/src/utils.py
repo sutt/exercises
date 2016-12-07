@@ -10,21 +10,28 @@ game['win_bool'] = None
 game['win_turns'] = None
 game['win_type'] = None
 game['win_player'] = None
-game['strat_found'] = None
+
 
 
 class Log:
 
 
     def __init__(self, noisy = False, **kwargs):
-        
+
+        #list of each game in a batch-loop        
+        self.games = []
+        self.strats = []
+        self.plays = []
+
         self.game = copy.copy(game)
 
-        self.games = []
-
+        #settings
         self.noisy = noisy
         self.record = True
         self.persist = True
+        
+        self.record_strategy = True
+        self.record_plays = True
 
 
     def game_start(self, game_i = None, noisy = False ):
@@ -41,7 +48,7 @@ class Log:
             print "GAME: ", str(game_i)
 
     def batch_strat_params(self, obj_strat):
-
+        """  ???? """
         self.batch_strat = {}
         self.batch_strat['connect_three_me'] = obj_strat.connect_three_me
         self.batch_strat['connect_three_you'] = obj_strat.connect_three_you
@@ -111,26 +118,39 @@ class Log:
         if noisy or self.noisy:
             print 'Game Ends in Draw at turn: ', str(self.game.get('count_turn','TURN_UNKNOWN'))
     
-    def strat_played(self, ret_strat,current_play, strat_type = "", noisy=False):
-        
-        if ret_strat > -1:
+    def strat_played(self, ret, current_play, noisy=False, just_strats = True):        
                 
-            self.game['strat_found'] =  {'turn': self.game.get('count_turn', None)
-                                         ,'player': copy.copy(current_play.player)
-                                         ,'stratcol': ret_strat
-                                         ,'type': strat_type }
-            
-            if noisy:
-                print 'STRAT type ', str(strat_type), \
-                      ' turn ', str(self.game.get('count_turn', "unknown")), \
-                      ' col ',str(ret_strat) , \
-                      ' player ', str(copy.copy(current_play.player))
+        _turn = self.game.get('count_turn', -1) + 1      # +1 b/c its called before make_play
+        _player = copy.copy(current_play.player)
+        _col =  ret[0]
+        _type = ret[1]
         
+        if self.record_strategy:
+
+            self.strats.append(  {'turn': _turn 
+                                        ,'player': _player 
+                                        ,'stratcol': _col
+                                        ,'type': _type } )
+            
+        if noisy:            
+            
+            if not(just_strats) or (_type is not None):   #dont print non-strategy moves, "Random"s
+            
+                sTurn =  str(_turn)
+                sStrat = 'Random' if ret[1] is None else ('Strat-' + ret[1] )
+                sCol = '' if ret[1] is None else str(ret[0])
+                sPlayer = str(_player)
+
+                print 'player ' , sPlayer, ' t', sTurn, ' ', sStrat, ' at col ', sCol
 
 
-    def game_play(self, noisy = False):
+    def game_play(self, playcol, play, noisy = False):
 
         self.game['count_turn'] += 1
+        
+        if self.record_plays:
+            this_play = (copy.copy(play.player), playcol)
+            self.plays.append(this_play)
 
 
     def game_win(self, player = None, win_type = None, win_type_ind = None, noisy = False):

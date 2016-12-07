@@ -49,19 +49,13 @@ def batch():
                 break
 
             #DECISION-ACTION
-            #print  str(play.player)
-            ret_strat_1 = strat.test_connect_three_me( play, board, log )
-            ret_strat_2 = strat.test_connect_three_you( play, board, log ) 
-            ret_strat_3 = -1
-            if ret_strat_1 == -1 and ret_strat_2 == -1:
-                ret_strat_3 = strat.test_fork_me( play, board, log )
-            ret_strat, strat_type = strat.final_strat(iter_strats = (ret_strat_1, ret_strat_2, ret_strat_3), noisy = False) 
+            ret = strat.strategize(play,log,board) 
+            log.strat_played(ret, play, noisy = True )
             
-            log.strat_played(ret_strat, play, strat_type = strat_type, noisy = False)
-            
-            playcol = ret_strat if int(ret_strat) > -1 else random.sample(ap,1)[0]
+            playcol = ret[0] if int(ret[0]) > -1 else random.sample(ap,1)[0]
+            log.game_play(playcol, play)
             play.make_play(playcol)
-            log.game_play()
+            
 
             #EVAL-PAYOFF-FUNCTION
             if play.check_win(log = log):    #this writes to log too
