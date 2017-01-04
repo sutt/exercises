@@ -40,6 +40,12 @@ Build a Log-Class and pass it into significant funtions:
      append an inner-loop's worth of data to a running tally in the outer-loop, then reset this data inner data
 
 
+1/4
+
+MinGW bug: $ python -i for running python from git Bash
+
+
+
 Cool Portfolio of Code/Viz
 http://roadtolarissa.com/
 
