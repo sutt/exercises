@@ -1,4 +1,4 @@
-import time,os,sys,random,copy
+import time,os,sys,random,copy,json
 
 game = {}
 game['game_i'] = None
@@ -90,8 +90,14 @@ class Log:
         fn = new_output(all_files)
         fnpath = os.path.join( os.getcwd(), 'data', fn )
 
+        if False:   #old way
+            out_data = str(data)
+        
+        out_dict = {'outcome':data}
+        out_data = json.dumps(out_dict)
+
         f = open(fnpath,'w')
-        f.writelines(str(data))
+        f.writelines(out_data)
         f.close()
 
         if kwargs.get('noisy',False):
@@ -202,7 +208,8 @@ class Log:
     def end_runs(self):
         print 'ENDING -----'
         if self.persist:
-            #writes games to file as json
+            #writes games to file as 
+            #was previously sent as pure str(data) -> out, eval(str) -> in
             self.persist_to_file(data = self.games, noisy = True)
             
 
