@@ -1,4 +1,3 @@
-import xlwings as xw
 import json
 import yaml
 import sys, os
@@ -20,6 +19,7 @@ game['win_player'] = None
 ap = argparse.ArgumentParser()
 ap.add_argument("--excel", action="store_true", default=False)
 ap.add_argument("--csv", action="store_true", default=False)
+ap.add_argument("--dont_sum_strats", action="store_true", default=False)  #will leave a comma in your csv
 args = vars(ap.parse_args())
 
 
@@ -32,11 +32,19 @@ def load_file(path):
     data_json = yaml.load(txt)
     return data_json
 
+def find_replace_chars(input, find, replace):
+    
+    find_ind = [i for i,v in enumerate(input) if v == find]
+    replaced = [replace if i in find_ind else v for i,v in enumerate(input) ]
+    output = ''.join(replaced)
+    return output
+
 def all_files(low,high,**kwargs):
     
     game_col_names = game.keys()   # ['win_turns',  'game_i', 'win_player']
     games_list = []
 
+    #Iter over all output files
     for n in range(low,high+1):
         print n        
         path_n = "../data/output" + str(n) + ".txt"
@@ -47,27 +55,36 @@ def all_files(low,high,**kwargs):
         strat = data["batch"]["strategy"]
 
         
-        #strat
+        #strat, same for whole batch
         strat_col_names = ['connect_three_me', 'connect_three_you', 'fork_me']
-        strat_vals = [strat.get(k,"BAD") for k in strat_col_names]
+        strat_vals = [str(strat.get(k,"BAD")) for k in strat_col_names]
+        if not(args["dont_sum_strats"]):
+            strat_vals = map(lambda x: find_replace_chars(x,",","|"), strat_vals)
+            strat_vals = map(lambda x: find_replace_chars(x," ",""), strat_vals)
+            strat_vals = map(lambda x: find_replace_chars(x,"[","<"), strat_vals)
+            strat_vals = map(lambda x: find_replace_chars(x,"]",">"), strat_vals)
+            
 
-        #game
+        #game, separate games within a batch
         for _game in games:
             game_list = []
             for k in game_col_names: 
                 v = _game.get(k,"BAD")
                 game_list.append(v)
-            game_list.append(strat_vals)
+            game_list.extend(strat_vals)
             games_list.append(game_list)
 
-        col_names = game_col_names.extend(strat_col_names)
-        table = [col_names]
-        table.extend(games_list)
+    #All output files together
+    game_col_names.extend(strat_col_names)
+    col_names = game_col_names
+    table = [col_names]
+    table.extend(games_list)
     
     return table
         
 
 def xl():
+    import xlwings as xw
     #wb = xw.Book()  # this will create a new workbook
     wb = xw.Book('scratch1.xlsx')  # connect to an existing file in the current working directory
     sht = wb.sheets['Sheet2']
@@ -107,7 +124,7 @@ def make_csv(input_data):
 
 def main():
 
-    rows = all_files(98,98)
+    rows = all_files(19,19)
 
     down, across = len(rows), len(rows[0])
 

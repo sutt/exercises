@@ -9,6 +9,8 @@ ctrl+w : close second editor
 
 Mintty (Git Bash Rainbow)
 To Scroll: Shift + Up / Down [PgUp / PgDown]
+To Copy/Paste: Shift + Ins, Shift+ ?
+MinGW bug: $ python -i for running python from git Bash
 
 
 12/6
@@ -40,9 +42,9 @@ Build a Log-Class and pass it into significant funtions:
      append an inner-loop's worth of data to a running tally in the outer-loop, then reset this data inner data
 
 
-1/4
 
-MinGW bug: $ python -i for running python from git Bash
+
+
 
 
 
