@@ -59,8 +59,10 @@ def all_files(low,high,**kwargs):
         strat_col_names = ['connect_three_me', 'connect_three_you', 'fork_me']
         strat_vals = [str(strat.get(k,"BAD")) for k in strat_col_names]
         if not(args["dont_sum_strats"]):
+            # [1,2] -> <1|2>  ; [0,0] -> <|>  ; [2] -> <2>
             strat_vals = map(lambda x: find_replace_chars(x,",","|"), strat_vals)
             strat_vals = map(lambda x: find_replace_chars(x," ",""), strat_vals)
+            strat_vals = map(lambda x: find_replace_chars(x,"0",""), strat_vals)
             strat_vals = map(lambda x: find_replace_chars(x,"[","<"), strat_vals)
             strat_vals = map(lambda x: find_replace_chars(x,"]",">"), strat_vals)
             
@@ -124,7 +126,7 @@ def make_csv(input_data):
 
 def main():
 
-    rows = all_files(19,19)
+    rows = all_files(38,38)
 
     down, across = len(rows), len(rows[0])
 
