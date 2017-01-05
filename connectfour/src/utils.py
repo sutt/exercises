@@ -56,7 +56,7 @@ class Log:
         self.batch_strat = {}
         self.batch_strat['connect_three_me'] = obj_strat.connect_three_me
         self.batch_strat['connect_three_you'] = obj_strat.connect_three_you
-        self.batch_strat['connect_three_you'] = obj_strat.fork_me
+        self.batch_strat['fork_me'] = obj_strat.fork_me
 
     def print_board(self, state):
     
@@ -93,7 +93,7 @@ class Log:
         if False:   #old way
             out_data = str(data)
         
-        out_dict = {'outcome':data}
+        out_dict = {'batch':data}
         out_data = json.dumps(out_dict)
 
         f = open(fnpath,'w')
@@ -210,7 +210,8 @@ class Log:
         if self.persist:
             #writes games to file as 
             #was previously sent as pure str(data) -> out, eval(str) -> in
-            self.persist_to_file(data = self.games, noisy = True)
+            data = {'strategy':self.batch_strat, 'games':self.games}
+            self.persist_to_file(data = data, noisy = True)
             
 
 

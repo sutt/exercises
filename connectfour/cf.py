@@ -30,11 +30,9 @@ def batch():
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
     log = Log(noisy = False)
     
-    strat = KnownRules(players = eval(args['strat_players']) 
-                                      ,c3me = eval(args['strat_me']) 
-                                      ,c3you = eval(args['strat_you']) 
-                                      ,forkme = eval(args['strat_fork'])
-                                       )
+    #AI-Rules
+    c3me, c3you, forkme = eval(args['strat_me']), eval(args['strat_you']), eval(args['strat_fork'])
+    strat = KnownRules(players = eval(args['strat_players']) ,c3me = c3me ,c3you = c3you , forkme = forkme)
     log.batch_strat_params(strat)
 
     for game_i in range(int(args['runs'])):

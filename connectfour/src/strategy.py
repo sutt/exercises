@@ -22,7 +22,6 @@ class KnownRules:
         
         if not( current_play.player in self.connect_three_me): return -1
 
-        temp_log = Log(noisy = False)
         available_plays = current_play.available_plays()
 
         for play_col_i in range(current_play.board.width):
@@ -43,8 +42,7 @@ class KnownRules:
     def test_connect_three_you(self,current_play, passin_board, passin_log, **kwargs):
         
         if not( current_play.player in self.connect_three_you): return -1
-
-        temp_log = Log(noisy = False)
+            
         available_plays = current_play.available_plays()
 
         current_player = copy.copy(current_play.player)

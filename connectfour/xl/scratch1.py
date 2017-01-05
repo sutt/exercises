@@ -34,7 +34,7 @@ def load_file(path):
 
 def all_files(low,high,**kwargs):
     
-    col_names = game.keys()   # ['win_turns',  'game_i', 'win_player']
+    game_col_names = game.keys()   # ['win_turns',  'game_i', 'win_player']
     games_list = []
 
     for n in range(low,high+1):
@@ -42,18 +42,29 @@ def all_files(low,high,**kwargs):
         path_n = "../data/output" + str(n) + ".txt"
         data = load_file(path_n)
         
-        games = data["outcome"]
+        #schema of log
+        games = data["batch"]["games"]
+        strat = data["batch"]["strategy"]
+
+        
+        #strat
+        strat_col_names = ['connect_three_me', 'connect_three_you', 'fork_me']
+        strat_vals = [strat.get(k,"BAD") for k in strat_col_names]
+
+        #game
         for _game in games:
             game_list = []
-            for k in col_names: 
+            for k in game_col_names: 
                 v = _game.get(k,"BAD")
                 game_list.append(v)
+            game_list.append(strat_vals)
             games_list.append(game_list)
 
-        rows = [col_names]
-        rows.extend(games_list)
+        col_names = game_col_names.extend(strat_col_names)
+        table = [col_names]
+        table.extend(games_list)
     
-    return rows
+    return table
         
 
 def xl():
@@ -96,7 +107,7 @@ def make_csv(input_data):
 
 def main():
 
-    rows = all_files(9,9)
+    rows = all_files(98,98)
 
     down, across = len(rows), len(rows[0])
 
