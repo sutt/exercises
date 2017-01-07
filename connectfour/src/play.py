@@ -12,7 +12,7 @@ class Play:
         self.extra = False
 
     def get_column(self,column):
-        return [self.state[row][column] for row in range(self.board.width)] 
+        return [self.state[row][column] for row in range(self.board.height)] 
 
     def column_height(self,column,**kwargs):
         col = self.get_column(column)
@@ -63,7 +63,7 @@ class Play:
                 if log is not None: log.game_win(player = player, win_type = 'row', win_type_ind = i)
                 return True
 
-        for i in range(self.board.height):
+        for i in range(self.board.width):
             col = self.get_column(i)[:]
             if self.four(col):        
                 player =  self.four(col,ret_bool=False)

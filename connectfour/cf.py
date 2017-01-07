@@ -5,25 +5,32 @@ from src.play import Play
 from src.utils import Log
 from src.strategy import KnownRules   #add .find_fork - this should open game back up
 
-#For debugging 
-def_arg = "(0,0)"
-def_arg = "(1,2)"
 
 ap = argparse.ArgumentParser()
+
 ap.add_argument("--analytics", action="store_true", default=False)
 ap.add_argument("--stat", default='t')
 ap.add_argument("--readfile", default="")
 ap.add_argument("--pct_analytics", default ="")
+
 ap.add_argument("--runs", default = 1)
+
+def_arg = "(0,0)" #"(1,2)"  for debugging
 ap.add_argument("--strat_me", default = def_arg) #action="store_true", default=False)
 ap.add_argument("--strat_you", default = def_arg) #action="store_true", default=False)
 ap.add_argument("--strat_fork", default = def_arg) #action="store_true", default=False)
 ap.add_argument("--strat_players", default="(1,2)")
+ap.add_argument("--board_height", default="8")
+ap.add_argument("--board_width", default="8")
 args = vars(ap.parse_args())
 
-BOARD_WIDTH = 8
-BOARD_HEIGHT = 8
-INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]
+c3me, c3you, forkme,  = eval(args['strat_me']), eval(args['strat_you']), eval(args['strat_fork'])
+strat_players = eval(args['strat_players'])
+BOARD_WIDTH = int(args["board_width"])
+BOARD_HEIGHT = int(args["board_height"])
+
+
+INIT_STATE = [[0 for col in range(BOARD_WIDTH)] for row in range(BOARD_HEIGHT)]
 
 def batch():
     
@@ -32,8 +39,7 @@ def batch():
     log.batch_board_params(board)
     
     #AI-Rules
-    c3me, c3you, forkme = eval(args['strat_me']), eval(args['strat_you']), eval(args['strat_fork'])
-    strat = KnownRules(players = eval(args['strat_players']) ,c3me = c3me ,c3you = c3you , forkme = forkme)
+    strat = KnownRules(players = strat_players ,c3me = c3me ,c3you = c3you , forkme = forkme)
     log.batch_strat_params(strat)
 
     for game_i in range(int(args['runs'])):
@@ -59,6 +65,7 @@ def batch():
             
 
             #EVAL-PAYOFF-FUNCTION
+
             if play.check_win(log = log):    #this writes to log too
                 log.game_win_print(win_state = play.state, noisy = False)    
                 break
