@@ -20,6 +20,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--excel", action="store_true", default=False)
 ap.add_argument("--csv", action="store_true", default=False)
 ap.add_argument("--dont_sum_strats", action="store_true", default=False)  #will leave a comma in your csv
+ap.add_argument("--from_to", default = (1,1))   #which files from /data/outputN.json 
 args = vars(ap.parse_args())
 
 
@@ -126,9 +127,13 @@ def make_csv(input_data):
 
 def main():
 
-    rows = all_files(38,38)
+    from_to_string = args["from_to"]
+    from_to = eval(from_to_string)
+    if len(from_to) != 2: print 'from_to is not correct'
 
-    down, across = len(rows), len(rows[0])
+    rows = all_files(from_to[0],from_to[1])
+
+    down, across = len(rows), len(rows[0])   #note: previous steps should have assured all across are same length
 
     if args["csv"]:
         
