@@ -27,8 +27,9 @@ INIT_STATE = [[0 for row in range(BOARD_WIDTH)] for col in range(BOARD_HEIGHT)]
 
 def batch():
     
-    board = Board(BOARD_WIDTH,BOARD_HEIGHT)  #refactor out board
     log = Log(noisy = False)
+    board = Board(BOARD_WIDTH,BOARD_HEIGHT)
+    log.batch_board_params(board)
     
     #AI-Rules
     c3me, c3you, forkme = eval(args['strat_me']), eval(args['strat_you']), eval(args['strat_fork'])

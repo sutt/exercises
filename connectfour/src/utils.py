@@ -51,6 +51,11 @@ class Log:
         if noisy or self.noisy:
             print "GAME: ", str(game_i)
 
+    def batch_board_params(self, inp_board):
+        self.batch_board = {}
+        self.batch_board["board_width"] = inp_board.width
+        self.batch_board["board_height"] = inp_board.height
+
     def batch_strat_params(self, obj_strat):
         """  record strat used params """
         self.batch_strat = {}
@@ -210,7 +215,9 @@ class Log:
         if self.persist:
             #writes games to file as 
             #was previously sent as pure str(data) -> out, eval(str) -> in
-            data = {'strategy':self.batch_strat, 'games':self.games}
+            data = {'strategy':self.batch_strat,
+                    'board': self.batch_board,
+                    'games':self.games}
             self.persist_to_file(data = data, noisy = True)
             
 

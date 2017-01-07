@@ -54,7 +54,7 @@ def all_files(low,high,**kwargs):
         #schema of log
         games = data["batch"]["games"]
         strat = data["batch"]["strategy"]
-
+        board = data["batch"]["board"]
         
         #strat, same for whole batch
         strat_col_names = ['connect_three_me', 'connect_three_you', 'fork_me']
@@ -66,7 +66,11 @@ def all_files(low,high,**kwargs):
             strat_vals = map(lambda x: find_replace_chars(x,"0",""), strat_vals)
             strat_vals = map(lambda x: find_replace_chars(x,"[","<"), strat_vals)
             strat_vals = map(lambda x: find_replace_chars(x,"]",">"), strat_vals)
-            
+
+        #board, same for whole batch
+        board_col_names = ['board_width', 'board_height']
+        board_vals = [str(board.get(k,"BAD")) for k in board_col_names]
+
 
         #game, separate games within a batch
         for _game in games:
@@ -74,12 +78,22 @@ def all_files(low,high,**kwargs):
             for k in game_col_names: 
                 v = _game.get(k,"BAD")
                 game_list.append(v)
+            
+            #add batch-constants to game-specifics
             game_list.extend(strat_vals)
+            game_list.extend(board_vals)
+            
             games_list.append(game_list)
+            # end _game -------------------------
 
-    #All output files together
+        # end n ---------------------------------
+
+    #Build full table
     game_col_names.extend(strat_col_names)
+    game_col_names.extend(board_col_names)
     col_names = game_col_names
+    
+    #All col names top row, games list underneath
     table = [col_names]
     table.extend(games_list)
     
@@ -133,7 +147,8 @@ def main():
 
     rows = all_files(from_to[0],from_to[1])
 
-    down, across = len(rows), len(rows[0])   #note: previous steps should have assured all across are same length
+    #note: previous steps should have assured all across are same length
+    down, across = len(rows), len(rows[0])   
 
     if args["csv"]:
         
