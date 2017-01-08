@@ -22,6 +22,10 @@ ap.add_argument("--strat_fork", default = def_arg) #action="store_true", default
 ap.add_argument("--strat_players", default="(1,2)")
 ap.add_argument("--board_height", default="8")
 ap.add_argument("--board_width", default="8")
+
+ap.add_argument("--noisy_gamewin", action="store_true", default=False)
+ap.add_argument("--noisy_strat", action="store_true", default=False)
+
 args = vars(ap.parse_args())
 
 c3me, c3you, forkme,  = eval(args['strat_me']), eval(args['strat_you']), eval(args['strat_fork'])
@@ -34,7 +38,7 @@ INIT_STATE = [[0 for col in range(BOARD_WIDTH)] for row in range(BOARD_HEIGHT)]
 
 def batch():
     
-    log = Log(noisy = False)
+    log = Log(noisy = False, noisy_win = args["noisy_gamewin"])
     board = Board(BOARD_WIDTH,BOARD_HEIGHT)
     log.batch_board_params(board)
     
@@ -57,7 +61,7 @@ def batch():
 
             #DECISION-ACTION
             ret = strat.strategize(play,log,board) 
-            log.strat_played(ret, play, noisy = False )
+            log.strat_played(ret, play, noisy = args["noisy_strat"] )
             
             playcol = ret[0] if int(ret[0]) > -1 else random.sample(ap,1)[0]
             log.game_play(playcol, play)
@@ -67,7 +71,7 @@ def batch():
             #EVAL-PAYOFF-FUNCTION
 
             if play.check_win(log = log):    #this writes to log too
-                log.game_win_print(win_state = play.state, noisy = False)    
+                log.game_win_print(win_state = play.state, noisy = args["noisy_gamewin"])    
                 break
 
         log.game_end()

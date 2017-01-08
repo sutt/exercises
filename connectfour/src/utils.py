@@ -29,6 +29,7 @@ class Log:
 
         #settings
         self.noisy = noisy
+        self.noisy_win = kwargs.get('noisy_win',False)
         self.record = True
         self.persist = True
         
@@ -177,7 +178,7 @@ class Log:
         self.game['win_bool'] = True
         self.game['win_turns'] = self.game['count_turn']
 
-        if noisy or self.noisy:
+        if noisy or self.noisy or self.noisy_win:
             
             s_win_type = 'unknown' if win_type is None else str(win_type)
             s_win_type_ind = 'unknown' if win_type_ind is None else str(win_type_ind)
