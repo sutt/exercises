@@ -37,15 +37,29 @@ def return_shares():
     return rows, cols, areas
 
 rows, cols, areas = return_shares()
+print rows[0]
 
 
+def get_that( ind, board):
+    return [i for i in ind]
+    #return [board[i] for i in ind]
+
+p = text_to_puzzle(p1)
+print p[2]
+
+print get_that[rows[0][:], p]
+print get_that[areas[5], p]
 
 #puzzle81 = text_to_puzzle(p1)
 #print string_to_puzzle(puzzle81, spaces=True)
 
 
 
+#Random thoughts -------
 
+ #How to understand which rows/cols are part of which area? 
+    #All rows meet all cols, but each area only hits 3 rows, 3 cols
+    #each area shares common, rows+cols with 4 other areas
 
 #working stuff --------
 if False:
