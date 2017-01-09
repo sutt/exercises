@@ -69,7 +69,6 @@ def batch():
             
 
             #EVAL-PAYOFF-FUNCTION
-
             if play.check_win(log = log):    #this writes to log too
                 log.game_win_print(win_state = play.state, noisy = args["noisy_gamewin"])    
                 break

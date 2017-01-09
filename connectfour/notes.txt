@@ -12,6 +12,13 @@ To Scroll: Shift + Up / Down [PgUp / PgDown]
 To Copy/Paste: Shift + Ins, Shift+ ?
 MinGW bug: $ python -i for running python from git Bash
 
+Mintty bug: python raw_input() doesnt print to screen, also some other print() problems
+    one solution is to call sys.stdout.flush()
+    other is to call $ python -u file.python
+    or super the sys.stdout module as seen here: 
+        http://stackoverflow.com/questions/230751/how-to-flush-output-of-python-print
+
+
 
 12/6
 
