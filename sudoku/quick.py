@@ -41,14 +41,11 @@ print rows[0]
 
 
 def get_that( ind, board):
-    return [i for i in ind]
-    #return [board[i] for i in ind]
+    return [board[i] for i in ind]
 
 p = text_to_puzzle(p1)
-print p[2]
-
-print get_that[rows[0][:], p]
-print get_that[areas[5], p]
+print get_that(rows[0], p)
+print get_that(areas[5], p)
 
 #puzzle81 = text_to_puzzle(p1)
 #print string_to_puzzle(puzzle81, spaces=True)
