@@ -31,7 +31,7 @@ class Log:
         self.noisy = noisy
         self.noisy_win = kwargs.get('noisy_win',False)
         self.record = True
-        self.persist = True
+        self.persist = kwargs.get('save', False)
         
         self.record_strategy = True
         self.record_plays = True

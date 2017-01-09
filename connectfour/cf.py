@@ -14,6 +14,7 @@ ap.add_argument("--readfile", default="")
 ap.add_argument("--pct_analytics", default ="")
 
 ap.add_argument("--runs", default = 1)
+ap.add_argument("--save", action="store_true", default=False)
 
 def_arg = "(0,0)" #"(1,2)"  for debugging
 ap.add_argument("--strat_me", default = def_arg) #action="store_true", default=False)
@@ -32,7 +33,6 @@ c3me, c3you, forkme,  = eval(args['strat_me']), eval(args['strat_you']), eval(ar
 strat_players = eval(args['strat_players'])
 BOARD_WIDTH = int(args["board_width"])
 BOARD_HEIGHT = int(args["board_height"])
-
 
 INIT_STATE = [[0 for col in range(BOARD_WIDTH)] for row in range(BOARD_HEIGHT)]
 

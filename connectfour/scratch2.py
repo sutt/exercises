@@ -62,9 +62,13 @@ def askUser():
     subprocess.call("python cf.py --runs 2 --noisy_gamewin --noisy_strat --strat_me (1,2) --strat_you (1,2) --strat_fork (1,2)")
     pause('\n[enter] for next section ...', [''])
 
-    print print_title_section('Logging & Analytics: Batch runs, data schema')
-
     print print_title_section('Custom Rules: change board, rules')
+    print "     has the use of all strategies.\n"
+    print "running:    $ python cf.py --runs 1 --board_width 11 --board_height 6"
+    pause('\n[enter] to see run cmd ...', [''])
+    subprocess.call("python cf.py --runs 1 --board_width 11 --board_height 6")
+    
+    print print_title_section('Logging & Analytics: Batch runs, data schema')
 
 
 
