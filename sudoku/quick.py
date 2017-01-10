@@ -216,7 +216,8 @@ for i in range(20):
     space = search(space)
     space = constraint(space)
     if space == -1:
-        space = saved_space
+        print 'RESET'
+        space = save_space
     
     if len(filter(lambda x: len(x) == 1, space)) == 81:
         puzzle81 = text_to_puzzle(p1)
@@ -244,3 +245,16 @@ if False:
 
     for i in range(12):
         print str(i), " : ", str(puzzle81[i])
+
+#this is a solution for evil,
+# need to follow path of guess 1 (out of (1,8)) then 7 out of (2,7)
+# if you guess 8 at first you solved but wrong
+# 1 7 6 3 8 4 2 5 9
+# 5 9 3 2 1 7 8 6 4
+# 8 4 2 9 6 5 3 1 7
+# 2 1 8 4 3 6 9 7 9
+# 4 3 5 1 7 8 9 6 2
+# 9 6 7 5 2 1 4 3 8
+# 6 2 9 7 4 3 9 8 9
+# 7 8 4 6 1 9 9 2 3
+# 3 5 1 8 1 2 7 4 9
