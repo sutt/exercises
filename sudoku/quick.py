@@ -145,7 +145,10 @@ for _i in range(9):
 #print map(c_to_ij,discovered)
 #print get_that(discovered,space)
 
-#print len(filter(lambda x: len(x) == 1, space))
+a = filter(lambda x: len(x) > 1, space)
+s = ""
+b = [ str((i,v)) for i,v in enumerate(a)]
+print '\n'.join(b)
 #print len(filter(lambda x: int(x) > 0, p))
 
 puzzle81 = text_to_puzzle(p1)
