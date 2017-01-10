@@ -1,5 +1,6 @@
 import os,sys, copy
 
+#easy
 p1 = """
 410070005
 080006090
@@ -10,6 +11,18 @@ p1 = """
 000004000
 090800070
 700060028
+"""
+#hard
+p1 = """
+000084020
+100002500
+000007006
+078005001
+004206900
+600800240
+700400000
+003700009
+010560000
 """
 
 def text_to_puzzle(text):
@@ -73,7 +86,7 @@ print 'printing known spaces on each iter'
 print len(filter(lambda x: len(x) == 1, space))
 needed = (set(map(str,range(1,10))))
 space2 = list(space)[:]
-for _i in range(7):
+for _i in range(9):
     
     for s in shares:
         
