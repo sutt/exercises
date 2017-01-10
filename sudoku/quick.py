@@ -39,7 +39,7 @@ def return_shares():
 p = text_to_puzzle(p1)
 
 rows, cols, areas = return_shares()
-print rows[0]
+#print rows[0]
 
 def get_that( ind, board):
     return [board[i] for i in ind]
@@ -56,7 +56,7 @@ board = range(81)
 space = tuple([fun(i,p) for i in board])
 
 space = tuple([fun(i,space) for i in board])
-print space[:5]
+#print space[:5]
 
 # each spot has three constraints associated with iter
 #for i in board:
@@ -69,9 +69,11 @@ shares.extend(cols)
 #print shares
 #print len(shares)
 
+print 'printing known spaces on each iter'
+print len(filter(lambda x: len(x) == 1, space))
 needed = (set(map(str,range(1,10))))
 space2 = list(space)[:]
-for _i in range(5):
+for _i in range(7):
     
     for s in shares:
         
@@ -98,15 +100,14 @@ for _i in range(5):
         space = tuple(space2[:])
     
     print len(filter(lambda x: len(x) == 1, space))
-    discovered = filter(lambda i: len(space[i]) == 1 and int(p[i]) == 0, board)
-    print discovered
+    #discovered = filter(lambda i: len(space[i]) == 1 and int(p[i]) == 0, board)
+    #print discovered
 
-print map(c_to_ij,discovered)
-
-print get_that(discovered,space)
+#print map(c_to_ij,discovered)
+#print get_that(discovered,space)
 
 #print len(filter(lambda x: len(x) == 1, space))
-print len(filter(lambda x: int(x) > 0, p))
+#print len(filter(lambda x: int(x) > 0, p))
 
 puzzle81 = text_to_puzzle(p1)
 print string_to_puzzle(puzzle81, spaces=True)
@@ -115,7 +116,7 @@ space_str = [item for sublist in space for item in sublist]
 space_str = ''.join(space_str)
 print string_to_puzzle(space_str, spaces=True)
 
-print map(len,space)
+#print map(len,space)
 
 
 #Random thoughts -------
