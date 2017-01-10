@@ -1,4 +1,7 @@
-import os,sys, copy
+import copy
+import os
+import random
+import sys
 
 #easy
 p1 = """
@@ -26,7 +29,7 @@ p1 = """
 """
 
 #evil
-p1 = """
+p0 = """
 000004200
 500000004
 040960000
@@ -50,7 +53,8 @@ p1 = """
 700000003
 001800000
 """
-print p1 == p1  #yes you typed it in the same type
+
+print p0 == p1  #yes you typed it in the same type
 def text_to_puzzle(text):
     return filter(str.isdigit,text)
     
@@ -108,55 +112,119 @@ shares.extend(cols)
 #print shares
 #print len(shares)
 
-print 'printing known spaces on each iter'
-print len(filter(lambda x: len(x) == 1, space))
-needed = (set(map(str,range(1,10))))
-space2 = list(space)[:]
-for _i in range(9):
+
+
+def constraint(space):
     
-    for s in shares:
+    cntr = 0
+    needed = (set(map(str,range(1,10))))
+    space2 = list(space)[:]
+
+    for _i in range(10):
         
-        knowns = set()
-        for spot in s:
-            if len(space[spot]) == 1:
-                knowns = knowns.union(space[spot])
+        spots_1 = len(filter(lambda x: len(x) == 1, space))
+
+        for s in shares:
+            
+            knowns = set()
+            for spot in s:
+                if len(space[spot]) == 1:
+                    knowns = knowns.union(space[spot])
+            
+            for spot in s:
+                if len(space[spot]) != 1:
+                    space2[spot] = tuple(filter(lambda k: k not in knowns, space[spot]))
+                    if len(space2[spot]) == 0:
+                        return -1
+
+            #needed = set(map(str,range(1,10)).difference(knowns))
+            for spot in s:
+                if len(space[spot]) != 1:
+                    _s = s[:]
+                    _s.remove(spot)
+                    available = map(lambda c: space[c], _s)
+                    available = [item for sublist in available for item in sublist]
+                    available = set(available)
+                    if len(available) < 9:
+                        space2[spot] = tuple(needed.difference(available))
+
+            space = tuple(space2[:])
         
-        for spot in s:
-            if len(space[spot]) != 1:
-                space2[spot] = tuple(filter(lambda k: k not in knowns, space[spot]))
+        #--- shares ----------------
+        
+        spots_2 = len(filter(lambda x: len(x) == 1, space))
+        
+        print str(spots_2)
+        
+        if spots_2 - spots_1 == 0:
+            cntr +=1
+        else:
+            cntr = 0
+        if cntr == 2:
+            print 'exiting...'
+            return space
 
-        #needed = set(map(str,range(1,10)).difference(knowns))
-        for spot in s:
-            if len(space[spot]) != 1:
-                _s = s[:]
-                _s.remove(spot)
-                available = map(lambda c: space[c], _s)
-                available = [item for sublist in available for item in sublist]
-                available = set(available)
-                if len(available) < 9:
-                    space2[spot] = tuple(needed.difference(available))
 
-        space = tuple(space2[:])
-    
-    print len(filter(lambda x: len(x) == 1, space))
-    #discovered = filter(lambda i: len(space[i]) == 1 and int(p[i]) == 0, board)
-    #print discovered
 
+#discovered = filter(lambda i: len(space[i]) == 1 and int(p[i]) == 0, board)
+#print discovered
 #print map(c_to_ij,discovered)
 #print get_that(discovered,space)
 
-a = filter(lambda x: len(x) > 1, space)
-s = ""
-b = [ str((i,v)) for i,v in enumerate(a)]
-print '\n'.join(b)
+
+
+def print_opens(space):
+    a = filter(lambda x: len(x) > 1, space)
+    s = ""
+    b = [ str((i,v)) for i,v in enumerate(a)]
+    print '\n'.join(b)
+    return 1
+
 #print len(filter(lambda x: int(x) > 0, p))
 
-puzzle81 = text_to_puzzle(p1)
-print string_to_puzzle(puzzle81, spaces=True)
+def search(space):
+    
+    opens = filter(lambda x: len(x) > 1, space)
+    min_open = min(map(lambda x: len(x), opens))
+    ind = map(lambda x: len(x), space).index(min_open)
 
-space_str = [item for sublist in space for item in sublist]
-space_str = ''.join(space_str)
-print string_to_puzzle(space_str, spaces=True)
+    possible = space[ind]
+    print possible
+    guess = random.sample(possible,1)[0]
+    print 'guess: ',str(guess)
+    def add_guess(i):
+        if i  == ind:
+            return tuple(guess)
+        else:
+            return space[i]
+
+    
+    space2 = tuple([add_guess(i) for i in board])
+    return space2
+
+
+#MAIN
+
+print 'printing known spaces on each iter'
+print len(filter(lambda x: len(x) == 1, space))
+constraint(space)
+
+space = constraint(space)
+
+for i in range(20):    
+    save_space = space[:]
+    space = search(space)
+    space = constraint(space)
+    if space == -1:
+        space = saved_space
+    
+    if len(filter(lambda x: len(x) == 1, space)) == 81:
+        puzzle81 = text_to_puzzle(p1)
+        print string_to_puzzle(puzzle81, spaces=True)
+
+        space_str = [item for sublist in space for item in sublist]
+        space_str = ''.join(space_str)
+        print string_to_puzzle(space_str, spaces=True)
 
 #print map(len,space)
 
@@ -176,5 +244,3 @@ if False:
 
     for i in range(12):
         print str(i), " : ", str(puzzle81[i])
-
- 
