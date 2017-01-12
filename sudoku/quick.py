@@ -211,10 +211,14 @@ constraint(space)
 
 space = constraint(space)
 
+save_space = space[:]
 for i in range(20):    
-    save_space = space[:]
-    space = search(space)
-    space = constraint(space)
+    
+    try:
+        space = search(space)
+        space = constraint(space)
+    except:
+        pass
     if space == -1:
         print 'RESET'
         space = save_space
@@ -226,6 +230,8 @@ for i in range(20):
         space_str = [item for sublist in space for item in sublist]
         space_str = ''.join(space_str)
         print string_to_puzzle(space_str, spaces=True)
+        print 'end---'
+        break
 
 #print map(len,space)
 
@@ -246,7 +252,7 @@ if False:
     for i in range(12):
         print str(i), " : ", str(puzzle81[i])
 
-#this is a solution for evil,
+#t'his is a solution for evil,
 # need to follow path of guess 1 (out of (1,8)) then 7 out of (2,7)
 # if you guess 8 at first you solved but wrong
 # 1 7 6 3 8 4 2 5 9
