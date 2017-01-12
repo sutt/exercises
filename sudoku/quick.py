@@ -42,7 +42,7 @@ p0 = """
 """
 
 #evil
-p1 = """
+p2 = """
 000004200
 500000004
 040960000
@@ -52,6 +52,19 @@ p1 = """
 000043080
 700000003
 001800000
+"""
+
+#evil2
+p1 = """
+000804001
+061300000
+004000060
+900070050
+600402009
+030010002
+090000500
+000006480
+700508000
 """
 
 print p0 == p1  #yes you typed it in the same type
@@ -146,7 +159,8 @@ def constraint(space):
                     available = [item for sublist in available for item in sublist]
                     available = set(available)
                     if len(available) < 9:
-                        space2[spot] = tuple(needed.difference(available))
+                        if any(map(lambda num: num in space[spot] ,tuple(needed.difference(available)))):
+                            space2[spot] = tuple(needed.difference(available))
 
             space = tuple(space2[:])
         
@@ -171,6 +185,25 @@ def constraint(space):
 #print map(c_to_ij,discovered)
 #print get_that(discovered,space)
 
+def invalid(niner):
+    niner2 = tuple(niner)
+    try:
+        #ret =  2 > max( map(lambda num: niner2.count(num) ,range(1,9)) )
+        q = []
+        for i in range(1,9):
+            if niner2.count(str(i)) > 1:
+                return True
+    except:
+        return False
+    return False
+
+def check_valid(space):
+    for s in shares:
+        knowns = [space[spot][0] for spot in s if len(space[spot]) == 1]
+        ret = invalid(knowns)
+        if ret:
+            return True 
+    return False
 
 
 def print_opens(space):
@@ -207,25 +240,33 @@ def search(space):
 
 print 'printing known spaces on each iter'
 print len(filter(lambda x: len(x) == 1, space))
-constraint(space)
+#constraint(space)
 
 space = constraint(space)
 
-save_space = space[:]
-for i in range(20):    
+save_space = tuple(space[:])
+for i in range(300):    
     
     try:
         space = search(space)
+        ret = check_valid(space)
         space = constraint(space)
+        ret =  check_valid(space)
     except:
-        pass
-    if space == -1:
+        e = sys.exc_info()[0]
+        print e
+        print 'prob bob'
+        ret = False
+    if space == -1 or ret == True:
         print 'RESET'
         space = save_space
     
     if len(filter(lambda x: len(x) == 1, space)) == 81:
         puzzle81 = text_to_puzzle(p1)
         print string_to_puzzle(puzzle81, spaces=True)
+        
+        ret = check_valid(space)
+        print 'This one is VALID:' , str(not(ret))
 
         space_str = [item for sublist in space for item in sublist]
         space_str = ''.join(space_str)
