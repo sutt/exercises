@@ -1,0 +1,45 @@
+>dotnet build
+>dotnet run
+
+>dotnet restore
+ this will take ./project.json -> ./project.lock.json
+ the lock file lists all the details needed by the compiler or whatever
+
+>dotnet Program.dll   #this will run the dll in bin
+
+Need the Net461 to make an exe, 
+    otherwise youre only running a dll from netcore
+ "frameworks": {
+    "Net461": {},
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.3"
+        }
+      },
+
+
+  string.Split('|')  //single quotes are for char
+  
+  Convert.ToString(mystring)
+
+  //same: (?)
+  List<string> q = new List<string>();
+  var q = new List<string>();
+
+  //List of List
+  List<List<string>> qq = new List<List<string>>();
+
+  Ienumerable in System.Collections
+  Enumerable in System.Linq
+
+
+  Linq
+  http://www.codethinked.com/the-linq-selectmany-operator
+
+
+Old stuff
+https://blog.rendle.io/a-guide-to-the-net-projects-on-github/
+https://blogs.msdn.microsoft.com/luisdem/2016/10/11/net-core-how-to-publish-a-self-contained-application-exe/
+https://www.microsoft.com/net/download/core
