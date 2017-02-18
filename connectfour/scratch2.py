@@ -64,9 +64,9 @@ def askUser():
 
     print print_title_section('Custom Rules: change board, rules')
     print "     has the use of all strategies.\n"
-    print "running:    $ python cf.py --runs 1 --board_width 11 --board_height 6"
+    print "running:    $ python cf.py --runs 1 --board_width 11 --board_height 6 --noisy_gamewin"
     pause('\n[enter] to see run cmd ...', [''])
-    subprocess.call("python cf.py --runs 1 --board_width 11 --board_height 6")
+    subprocess.call("python cf.py --runs 1 --board_width 11 --board_height 6 --noisy_gamewin")
     
     print print_title_section('Logging & Analytics: Batch runs, data schema')
 
