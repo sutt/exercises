@@ -94,6 +94,7 @@ namespace PokerApplication
    }
    public void WriteToConsole(IEnumerable items)
     {
+        /*  //this is not working right now
         if ( (items[0].GetType == typeof(string)) or 
               (items[0].GetType == typeof(int)) 
 
@@ -104,6 +105,7 @@ namespace PokerApplication
             } 
             Console.WriteLine(o);
         }
+         */
     }
 
    //public List<string> Card(int num, Suit suit)

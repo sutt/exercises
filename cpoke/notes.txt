@@ -43,3 +43,13 @@ Old stuff
 https://blog.rendle.io/a-guide-to-the-net-projects-on-github/
 https://blogs.msdn.microsoft.com/luisdem/2016/10/11/net-core-how-to-publish-a-self-contained-application-exe/
 https://www.microsoft.com/net/download/core
+
+
+2.18.17
+
+To enable tabs
+{
+    "workbench.activityBar.visible": false,
+    "workbench.statusBar.visible": false,
+    "workbench.editor.showTabs": true
+}
