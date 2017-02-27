@@ -32,46 +32,6 @@ namespace PokerApplication
    }
 
 
-public string outputData2(List<int> inputData, bool int_item = false)
-   {
-        StringBuilder builder = new StringBuilder();
-        
-        foreach (var item in inputData) 
-        {
-            builder.Append(Convert.ToString(item)).Append(" - ");
-        }
-        
-        string sData = builder.ToString();
-        
-        return sData;
-   }
-
-   public string outputData(List<string> inputData, bool int_item = false)
-   {
-        StringBuilder builder = new StringBuilder();
-        
-        /*object iterData = new object();
-
-        if (inputData.GetType() == typeof(List<string>) ) {
-            List<string> iterData = inputData as List<string>; 
-        }
-
-        if (inputData.GetType() == typeof(List<int>) ) {
-            List<int> iterData = inputData as List<int>; 
-        }*/
-        
-        foreach (var item in inputData)
-        {
-            string s_item;
-            if (int_item) {s_item = Convert.ToString(item);}
-            else {s_item = item;}
-
-            builder.Append(s_item).Append(" - ");
-        }
-        string sData = builder.ToString();
-            
-       return sData;
-   }
    public int dealCard2(Random inpRand)
    {
        int ret = inpRand.Next(10);
@@ -114,8 +74,8 @@ public string outputData2(List<int> inputData, bool int_item = false)
        return ret;
    }
 
-   public List<List<string>> allHands(List<string> _common, 
-                                      List<string> _hole, 
+   public List<List<string>> allHands(List<string> _hole, 
+                                      List<string> _common, 
                                       List<List<int>> _combos)
    {
 
@@ -137,23 +97,7 @@ public string outputData2(List<int> inputData, bool int_item = false)
         return ret;
    }
 
-   public void WriteToConsole(IEnumerable items)
-    {
-        /*  //this is not working right now
-        if ( (items[0].GetType == typeof(string)) or 
-              (items[0].GetType == typeof(int)) 
 
-        foreach (object o in items)
-        {
-            if ( (o.GetType == typeof(string)) or o.GetType == typeof(int)) {
-
-            } 
-            Console.WriteLine(o);
-        }
-         */
-    }
-
-   //public List<string> Card(int num, Suit suit)
    public int Card(int num, int suit) 
    {
        //var splits = new List<Tuple<string, string>>();
@@ -164,7 +108,7 @@ public string outputData2(List<int> inputData, bool int_item = false)
 
 }
 
-
+//end helper
             
     public class Program
     {
@@ -174,13 +118,7 @@ public string outputData2(List<int> inputData, bool int_item = false)
             int iClubs = (int)Helper.Suit.Clubs;
             Console.WriteLine("the int of Clubs is:" + iClubs );        
             
-            //int q = h.Card(1, 1);
-            //Cards card = Cards();
-            //int q = Helper.Card(1,Suit.Clubs)
-            //string sq = Convert.ToString(q );
-            //Cards cs = new Cards();
-            //int jj = cs.unique_func();
-            
+            Logging L = new Logging();
             
             Console.WriteLine("Deal me in, dealer!");
             
@@ -188,20 +126,8 @@ public string outputData2(List<int> inputData, bool int_item = false)
 
             int howManyCards = myDeck.Count;
             Console.WriteLine("There are this many cards in the deck: " + Convert.ToString(howManyCards));
+            L.PrintOut(myDeck , "Your deck, sir: ");
 
-            //string sDeck = h.outputData(myDeck);
-            //Console.WriteLine("Your deck, sir: " + sDeck);
-
-            /*
-            int theCard = 17;
-
-            string myCard = myDeck[theCard];
-            Console.WriteLine("Your first hole card: " + myCard);
-
-            myDeck.RemoveAt(theCard);
-            string sDeck = h.outputData(myDeck);
-            Console.WriteLine("The remaining deck: " + sDeck);
-            */
 
             Random _rnd = new Random();
             
@@ -227,11 +153,11 @@ public string outputData2(List<int> inputData, bool int_item = false)
                 
             }
             
-            string myHoleCards = h.outputData(holeCards);
-            string myCommonCards = h.outputData(commonCards);
+            //string myHoleCards = h.outputData(holeCards);
+            //string myCommonCards = h.outputData(commonCards);
 
-            Console.WriteLine("Hole cards: " + myHoleCards );
-            Console.WriteLine("Common cards: " + myCommonCards );
+            //Console.WriteLine("Hole cards: " + myHoleCards );
+            //Console.WriteLine("Common cards: " + myCommonCards );
 
             string card1 = holeCards[0];
             string card2 = holeCards[1];
@@ -249,49 +175,38 @@ public string outputData2(List<int> inputData, bool int_item = false)
             else 
             {Console.WriteLine("Nah " + HolePair.ToString());}
 
+            // ---- Evaluate Hands ----------
             List<List<int>> combos = h.allCombos();
             
             List<List<string>> hands = h.allHands(holeCards, commonCards, combos);
 
+            Console.WriteLine("All Combos: ");
+            //List<string> dList = new List<string>();
+            L.PrintOutList(combos, true);
+
+            /*
+            foreach (List<int> c in combos)
+            {
+                L.PrintOut(c, "");
+            } */
+
             List<int> _ns = new List<int>() {6, 8, 20};         
             foreach (int _n in _ns)
             {
-            //int _n = 6;
-            
-            List<int> combosN = combos[_n];
-            List<string> handsN = hands[_n];
-            
-            Logging L = new Logging();
+                List<int> combosN = combos[_n];
+                List<string> handsN = hands[_n];
 
-            //"Combo #" + Convert.ToString(_n) + " " + 
-            L.PrintOut(combosN, "Combos: " );
-
-            //string s_handsN = h.outputData(handsN);
-            //Console.WriteLine("Hand #" + Convert.ToString(_n) + " " + s_handsN );
-            L.PrintOut(handsN, "Hands: " );
-
-            
+                L.PrintOut(combosN, ("Combo #" + Convert.ToString(_n) + " ") );
+                L.PrintOut(handsN, ("Hand #" + Convert.ToString(_n) + " ") );                
             }
+            
+            // ---- Misc and Testing ---------
             //Misc m = new Misc();
             //m.SelectManyEx2();
             //m.PrintListList(qqq);
-            
-            
-            //L.PrintOut(commonCards);
-
 
             Console.WriteLine("done.");
-            //m.SelectMany
-            //m
         }
-
-            //var out2 = h.outputData(qqq1,true);
-            //Console.WriteLine("qqq1: ", out2);
-
-            //DEMO ---------------------------------------------            
-
-
-        
 
     }
     
