@@ -31,6 +31,21 @@ namespace PokerApplication
        return data;
    }
 
+
+public string outputData2(List<int> inputData, bool int_item = false)
+   {
+        StringBuilder builder = new StringBuilder();
+        
+        foreach (var item in inputData) 
+        {
+            builder.Append(Convert.ToString(item)).Append(" - ");
+        }
+        
+        string sData = builder.ToString();
+        
+        return sData;
+   }
+
    public string outputData(List<string> inputData, bool int_item = false)
    {
         StringBuilder builder = new StringBuilder();
@@ -76,22 +91,52 @@ namespace PokerApplication
        return _deck; 
    }
 
-   public List<List<int>> allHands(List<string> _common, List<string> _hole)
+   public List<List<int>> allCombos()
    {
        var ret = new List<List<int>>();
        int N = 7;
-
+       
        for (int i = 0; i < N; i++) {
-           var ij = new List<int>();
-           ij.Add(i);
+
            for (int j = 0; j < N; j++) {
-               if (j == i) continue;
-               ij.Add(j);
+            
+                if (j == i) continue;
+
+                List<int> allcards = Enumerable.Range(0,N).ToList();
+               
+                allcards.Remove(i);
+                allcards.Remove(j);
+
+                ret.Add(allcards);
            }
-           ret.Add(ij);
+           
        }
        return ret;
    }
+
+   public List<List<string>> allHands(List<string> _common, 
+                                      List<string> _hole, 
+                                      List<List<int>> _combos)
+   {
+
+        List<List<string>> ret = new List<List<string>>();
+
+        List<string> c = new List<string>();
+        c.AddRange(_hole);
+        c.AddRange(_common);
+        
+        foreach (List<int> combo in _combos)
+        {
+            List<string> this_hand = new List<string>();
+            foreach (int ind in combo)
+            {
+                this_hand.Add( c.ElementAt(ind) );
+            }
+            ret.Add(this_hand);
+        }
+        return ret;
+   }
+
    public void WriteToConsole(IEnumerable items)
     {
         /*  //this is not working right now
@@ -118,6 +163,9 @@ namespace PokerApplication
     }
 
 }
+
+
+            
     public class Program
     {
         public static void Main(string[] args)
@@ -201,18 +249,52 @@ namespace PokerApplication
             else 
             {Console.WriteLine("Nah " + HolePair.ToString());}
 
-            List<List<int>> qqq = h.allHands(holeCards,commonCards);
-            var www = h.allHands(holeCards,commonCards);
+            List<List<int>> combos = h.allCombos();
             
-            var qqq1 = qqq[0];
-            h.WriteToConsole(qqq);
+            List<List<string>> hands = h.allHands(holeCards, commonCards, combos);
+
+            List<int> _ns = new List<int>() {6, 8, 20};         
+            foreach (int _n in _ns)
+            {
+            //int _n = 6;
+            
+            List<int> combosN = combos[_n];
+            List<string> handsN = hands[_n];
+            
+            Logging L = new Logging();
+
+            //"Combo #" + Convert.ToString(_n) + " " + 
+            L.PrintOut(combosN, "Combos: " );
+
+            //string s_handsN = h.outputData(handsN);
+            //Console.WriteLine("Hand #" + Convert.ToString(_n) + " " + s_handsN );
+            L.PrintOut(handsN, "Hands: " );
+
+            
+            }
+            //Misc m = new Misc();
+            //m.SelectManyEx2();
+            //m.PrintListList(qqq);
+            
+            
+            //L.PrintOut(commonCards);
+
+
+            Console.WriteLine("done.");
+            //m.SelectMany
+            //m
+        }
+
             //var out2 = h.outputData(qqq1,true);
             //Console.WriteLine("qqq1: ", out2);
-            
+
+            //DEMO ---------------------------------------------            
 
 
-        }
+        
+
     }
+    
 
 }
 
