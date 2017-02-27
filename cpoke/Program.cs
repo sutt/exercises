@@ -6,61 +6,6 @@ using System.Collections;
  
 namespace PokerApplication
 {
-
-    public class Helper
-{
-   
-   public List<List<int>> allCombos()
-   {
-       var ret = new List<List<int>>();
-       int N = 7;
-       
-       for (int i = 0; i < N; i++) {
-
-           for (int j = 0; j < N; j++) {
-            
-                if (j == i) continue;
-
-                List<int> allcards = Enumerable.Range(0,N).ToList();
-               
-                allcards.Remove(i);
-                allcards.Remove(j);
-
-                ret.Add(allcards);
-           }
-           
-       }
-       return ret;
-   }
-
-   public List<List<string>> allHands(List<string> _hole, 
-                                      List<string> _common, 
-                                      List<List<int>> _combos)
-   {
-
-        List<List<string>> ret = new List<List<string>>();
-
-        List<string> c = new List<string>();
-        c.AddRange(_hole);
-        c.AddRange(_common);
-        
-        foreach (List<int> combo in _combos)
-        {
-            List<string> this_hand = new List<string>();
-            foreach (int ind in combo)
-            {
-                this_hand.Add( c.ElementAt(ind) );
-            }
-            ret.Add(this_hand);
-        }
-        return ret;
-   }
-
-
-
-}
-
-//end helper
             
     public class Program
     {
@@ -85,12 +30,15 @@ namespace PokerApplication
             //string num1 = card1.Split('|' )[0];
 
             // ---- Evaluate Hands ----------
-            Helper h = new Helper();
-            List<List<int>> combos = h.allCombos();
-            List<List<string>> hands = h.allHands(holeCards, commonCards, combos);
-
-            Console.WriteLine("All Combos: ");
+            HandClass H = new HandClass();
+            
+            List<List<int>> combos = H.getCombos();
             //L.PrintOutList(combos, true);
+            
+            List<List<string>> hands = H.allHands(holeCards, commonCards);
+
+            
+            
 
             List<int> _ns = new List<int>() {6, 8, 20};         
             foreach (int _n in _ns)
