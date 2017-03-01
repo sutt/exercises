@@ -67,13 +67,15 @@ namespace PokerApplication
                 List<int> pairs = allPairs(_hand);
                 if (pairs.Count() > 0) {
                     int _highPair = pairs.Max();
-                    if (_highPair > HighPair) HighPair = _highPair;
+                    if (_highPair > HighPair) {
+                         HighPair = _highPair; }
                 }
 
                 List<int> trips = allTrips(_hand);
                 if (trips.Count() > 0) {
                     int _highTrip = trips.Max();
-                    if (_highTrip > HighTrip) HighTrip = _highTrip;
+                    if (_highTrip > HighTrip) {
+                        HighTrip = _highTrip; }
                 }
 
             }
@@ -81,17 +83,44 @@ namespace PokerApplication
             return 1;
         }
 
+        public List<string> getCardNums(List<string> inp_cards)
+        {
+            List<string> ret = new List<string>();
+            foreach (string c in inp_cards) {
+                ret.Add(c.Split('|')[0]);
+            }
+            return ret;
+        }
+
         public List<int> allPairs(List<string> _cards)
         {
             List<int> ret = new List<int>();
-            
+            List<string> num_cards = getCardNums(_cards);
+
+            for (int i = 0; i <= 12; i++)
+            {
+                string s_i = Convert.ToString(i);
+                //if _cards.Count(s_i);
+                if (num_cards.FindAll( s => s.Equals(s_i) ).Count() == 2) {
+                    ret.Add(i);
+                }
+            }
             return ret;
         }
 
         public List<int> allTrips(List<string> _cards)
         {
             List<int> ret = new List<int>();
+            List<string> num_cards = getCardNums(_cards);
 
+            for (int i = 0; i <= 12; i++)
+            {
+                string s_i =Convert.ToString(i);
+                
+                if (num_cards.FindAll( s => s.Equals(s_i) ).Count() == 3) {
+                    ret.Add(i);
+                }
+            }
             return ret;
         }
 
