@@ -63,29 +63,19 @@ namespace PokerApplication
         tx = TestIgnoreLowPair(cards, cards2, 2, hc );
         ResultsUtil(!tx, print);
     
+    //Crappola, not even a pair
+        cards = new List<string> {"2|3","1|2"};
+        cards2 = new List<string> {"5|1","6|3","7|2","10|2","11|1"};
+        tx = TestNotEvenPair(cards, cards2, -1, hc );
+        ResultsUtil(tx, print);
+
         //TestArrayInit();
 
         PrintOutResults();
         return 1;
     }
 
-        enum MyEnum
-        {
-            num1,
-            num2,
-            num3
-        }
-
-        public void TestArrayInit()
-        {
-            int[] _arr = new int[(System.Enum.GetValues(typeof(MyEnum)).Length)];
-            foreach (int i in _arr)
-            {
-                Console.WriteLine(Convert.ToString(i));
-            }
-
-            Console.WriteLine(Convert.ToString(_arr[2] > -1));
-        }
+        
 
         public void ResultsUtil(bool x, bool print = false)
         {
@@ -96,23 +86,29 @@ namespace PokerApplication
             Results.Add( Tuple.Create( Results.Count + 1, x));
         }
 
+        public bool TestNotEvenPair(  List<string> inp_holeCards,
+                                      List<string> inp_commonCards,
+                                      int exp_result,
+                                      HandClass inp_hc )
+        {
+            
+            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+            return _hs.Item1 == exp_result;
+            
+        }
+
         public bool TestIgnoreLowPair(List<string> inp_holeCards,
                                       List<string> inp_commonCards,
                                         int exp_result,
                                         HandClass inp_hc )
         {
             var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
-            
-            
 
             bool isPair = _hs.Item1 == (int) HandClass.HandStrength.Pair;
 
-            if (isPair) {
-                bool ret = _hs.Item2 == exp_result;
-                return ret;
-            } else {
+            if (isPair) return _hs.Item2 == exp_result;
             return false;
-            }
+            
         }
 
             
@@ -123,9 +119,10 @@ namespace PokerApplication
             List<int> ret = inp_hc.allPairs(inp_cards);
             
             if (ret.Count > 0) return (ret.Max() == exp_result); 
+            
             if (ret.Count == 0) {
                 try {
-                    int temp = ret.Max();
+                    int temp = ret.Max();  //error if you try to max an empty array
                 }
                 catch (InvalidOperationException)
                 {

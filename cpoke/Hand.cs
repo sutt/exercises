@@ -67,9 +67,12 @@ namespace PokerApplication
             StraightFlush
         }        
 
-        public Tuple<int,int,List<string>> evaluateHands( List<string> holeCards, 
+        public Tuple<int,int,List<int>> evaluateHands( List<string> holeCards, 
                                                             List<string> commonCards)
         {
+            //returns: int best-hand-type, the int of highest HandStrength of all possible hands
+            //          int type-rank: highest , high card for flush and straight, card-of for n-of-a-kind
+            //          List<int> kickers: remaining cards not used, ordered highest ton lowest                      
             List<List<string>> _hands = allHands(holeCards, commonCards);
 
             int hs_len = System.Enum.GetValues(typeof(HandStrength)).Length;
@@ -109,15 +112,15 @@ namespace PokerApplication
             int _topHandNum = -1;
             if (_topHand > -1) _topHandNum = _HandStrength[_topHand];
 
-            List<string> temp = new List<string>();
-            Tuple<int,int,List<string>> bestHand = 
+            List<int> temp = new List<int>();
+            Tuple<int,int,List<int>> bestHand = 
                 Tuple.Create(_topHand,_topHandNum,temp);
 
             return bestHand;
             
         }
 
-        
+
 
         public List<string> getCardNums(List<string> inp_cards)
         {
