@@ -83,6 +83,7 @@ namespace PokerApplication
             }
 
             
+            //TODO: these should proceed backwards, ignore processing lower hands
             foreach (List<string> _hand in _hands)
             {
                 List<int> pairs = allPairs(_hand);
@@ -112,6 +113,10 @@ namespace PokerApplication
             int _topHandNum = -1;
             if (_topHand > -1) _topHandNum = _HandStrength[_topHand];
 
+            //TODO: need to add a kickers function, this means the isPAir, etc 
+            //      has to return not only int, but indexes for all non-used cards.
+            //      Since hold+common are pooled, this will include common even
+            //      tho all players have these as kickers.
             List<int> temp = new List<int>();
             Tuple<int,int,List<int>> bestHand = 
                 Tuple.Create(_topHand,_topHandNum,temp);
