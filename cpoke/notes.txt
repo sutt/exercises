@@ -79,3 +79,11 @@ step5: {build-type} and {project-name}.dll dont seem to work here so we'll just 
         }
     ]
 }
+
+
+3.5.17
+
+to break from static void Main()
+    just "return;"
+
+dotnet test is a mess but an option

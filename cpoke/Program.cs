@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Collections;
- 
+
+
 namespace PokerApplication
 {
             
@@ -11,7 +12,17 @@ namespace PokerApplication
     {
         public static void Main(string[] args)
         {
-            
+            bool runTest = true;
+            if (runTest) {
+                TestClass tc = new TestClass();
+                string[] my_args = {"PrintThere"};
+
+                tc.RunTests(my_args);
+                return;
+
+                
+
+            }
             Logging L = new Logging();
             
             // ---- Deal Cards -----------------
@@ -37,7 +48,7 @@ namespace PokerApplication
             
             List<List<string>> hands = H.allHands(holeCards, commonCards);
 
-            int temp = H.evaluateHands(holeCards,commonCards);
+            var temp = H.evaluateHands(holeCards,commonCards);
             
             List<int> _ns = new List<int>() {6, 8, 20};         
             foreach (int _n in _ns)

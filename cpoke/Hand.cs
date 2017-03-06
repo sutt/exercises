@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+//using System.Math;
+
 
 namespace PokerApplication
 {
@@ -54,34 +56,68 @@ namespace PokerApplication
             return ret;
         }
 
-        
-        public int evaluateHands( List<string> holeCards, List<string> commonCards)
+        public enum HandStrength 
+        {
+            Pair,
+            Trips,
+            Straight,
+            Flush,
+            FullHouse,
+            FourOfAKind,
+            StraightFlush
+        }        
+
+        public Tuple<int,int,List<string>> evaluateHands( List<string> holeCards, 
+                                                            List<string> commonCards)
         {
             List<List<string>> _hands = allHands(holeCards, commonCards);
-            
-            int HighPair = -1;
-            int HighTrip = -1;
 
+            int hs_len = System.Enum.GetValues(typeof(HandStrength)).Length;
+            int[] _HandStrength = new int[hs_len] ;
+            for (int i = 0; i < hs_len; i++)
+            {
+                _HandStrength[i] = -1;
+            }
+
+            
             foreach (List<string> _hand in _hands)
             {
                 List<int> pairs = allPairs(_hand);
                 if (pairs.Count() > 0) {
-                    int _highPair = pairs.Max();
-                    if (_highPair > HighPair) {
-                         HighPair = _highPair; }
+                    int _high = pairs.Max();
+                    _HandStrength[(int)HandStrength.Pair] = 
+                        Math.Max(_high,
+                                 _HandStrength[(int)HandStrength.Pair]);
                 }
 
+                //TODO: these can be  made into functions stndard functions
                 List<int> trips = allTrips(_hand);
                 if (trips.Count() > 0) {
-                    int _highTrip = trips.Max();
-                    if (_highTrip > HighTrip) {
-                        HighTrip = _highTrip; }
+                    int _high = trips.Max();
+                    _HandStrength[(int)HandStrength.Trips] = 
+                        Math.Max(_high,
+                                 _HandStrength[(int)HandStrength.Trips]);
                 }
-
             }
 
-            return 1;
+            int _topHand = -1;
+            for (int i = 0; i < hs_len; i++)
+            {
+                if (_HandStrength[i] > -1) _topHand = i;
+            }
+            
+            int _topHandNum = -1;
+            if (_topHand > -1) _topHandNum = _HandStrength[_topHand];
+
+            List<string> temp = new List<string>();
+            Tuple<int,int,List<string>> bestHand = 
+                Tuple.Create(_topHand,_topHandNum,temp);
+
+            return bestHand;
+            
         }
+
+        
 
         public List<string> getCardNums(List<string> inp_cards)
         {
@@ -100,7 +136,6 @@ namespace PokerApplication
             for (int i = 0; i <= 12; i++)
             {
                 string s_i = Convert.ToString(i);
-                //if _cards.Count(s_i);
                 if (num_cards.FindAll( s => s.Equals(s_i) ).Count() == 2) {
                     ret.Add(i);
                 }
