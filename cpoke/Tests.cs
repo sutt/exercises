@@ -71,6 +71,15 @@ namespace PokerApplication
 
         //TestArrayInit();
 
+    //Build the kicker module...
+    Logging L = new Logging();
+    cards2 = new List<string> {"5|1","6|3","7|2","5|2","11|1"};
+    List<List<string>> DemIn = hc.allPairs2(cards2);
+    Console.WriteLine("The FivePair:");
+    L.PrintOutList(DemIn);            
+
+    Console.WriteLine(" ----------------------------------------------------- ");
+
         PrintOutResults();
         return 1;
     }
@@ -92,7 +101,7 @@ namespace PokerApplication
                                       HandClass inp_hc )
         {
             
-            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+            var _hs = inp_hc.evaluateHands2(inp_holeCards,inp_commonCards);
             return _hs.Item1 == exp_result;
             
         }
@@ -102,7 +111,7 @@ namespace PokerApplication
                                         int exp_result,
                                         HandClass inp_hc )
         {
-            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+            var _hs = inp_hc.evaluateHands2(inp_holeCards,inp_commonCards);
 
             bool isPair = _hs.Item1 == (int) HandClass.HandStrength.Pair;
 
