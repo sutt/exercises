@@ -116,7 +116,7 @@ namespace PokerApplication
             //TODO: need to add a kickers function, this means the isPAir, etc 
             //      has to return not only int, but indexes for all non-used cards.
             //      Since hold+common are pooled, this will include common even
-            //      tho all players have these as kickers.
+            //      tho all players have these as kickers.'
             List<int> temp = new List<int>();
             Tuple<int,int,List<int>> bestHand = 
                 Tuple.Create(_topHand,_topHandNum,temp);
