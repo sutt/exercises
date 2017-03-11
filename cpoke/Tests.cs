@@ -73,10 +73,10 @@ namespace PokerApplication
 
     //Build the kicker module...
     Logging L = new Logging();
-    cards2 = new List<string> {"5|1","6|3","7|2","5|2","11|1"};
-    List<List<string>> DemIn = hc.allPairs2(cards2);
-    Console.WriteLine("The FivePair:");
-    L.PrintOutList(DemIn);            
+    //cards2 = new List<string> {"5|1","6|3","7|2","5|2","11|1"};
+    //List<List<string>> DemIn = hc.allPairs2(cards2);
+    //Console.WriteLine("The FivePair:");
+    //L.PrintOutList(DemIn);            
 
     Console.WriteLine(" ----------------------------------------------------- ");
 
@@ -125,21 +125,9 @@ namespace PokerApplication
                               int exp_result,
                               HandClass inp_hc )
         {    
-            List<int> ret = inp_hc.allPairs(inp_cards);
+            Tuple<int,List<int>> ret = inp_hc.allPairs(inp_cards);
             
-            if (ret.Count > 0) return (ret.Max() == exp_result); 
-            
-            if (ret.Count == 0) {
-                try {
-                    int temp = ret.Max();  //error if you try to max an empty array
-                }
-                catch (InvalidOperationException)
-                {
-                    //no pairs; no max
-                    return (exp_result == -1);
-                }
-            }
-            return false;  //should not get here
+            return (ret.Item1 == exp_result); 
             
         }
 

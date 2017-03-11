@@ -11,8 +11,9 @@ namespace PokerApplication
 public class HandClass
 {
 
-    public  List<List<int>> combos = allCombos();
+    public List<List<int>> combos = allCombos();
     public List<List<int>> getCombos() {return combos;}
+    
     public static List<List<int>> allCombos()
     {
         var ret = new List<List<int>>();
@@ -86,26 +87,28 @@ public class HandClass
 
         //TODO: these should proceed backwards, ignore processing lower hands
         //TODO: individual hand types can be abstracted further
+        //TODO: only 5 cards in hand, so cutoff kickers after 3 cards for pair, etc.
         foreach (List<string> _hand in _hands)
         {
-            Tuple<int,List<int>> pairHand = allPairs3(_hand);
+            
+            Tuple<int,List<int>> pairHand = allPairs(_hand);
             if (pairHand.Item1 > -1) {
                 
                 _hs[(int)HandStrength.Pair] = Math.Max(pairHand.Item1, 
                                                         _hs[(int)HandStrength.Pair]);
-                
-                //TODO: only 5 cards in hand, so cutoff kickers after 3 cards
                 _kickers = pairHand.Item2;
             }
 
             
-            List<int> trips = allTrips(_hand);
-            if (trips.Count() > 0) {
-                int _high = trips.Max();
-                _hs[(int)HandStrength.Trips] = 
-                    Math.Max(_high,
-                                _hs[(int)HandStrength.Trips]);
+            
+            Tuple<int,List<int>> tripHand = allTrips(_hand);
+            if (tripHand.Item1 > -1) {
+                
+                _hs[(int)HandStrength.Trips] = Math.Max(tripHand.Item1, 
+                                                        _hs[(int)HandStrength.Trips]);
+                _kickers = pairHand.Item2;
             }
+            
             
         }
 
@@ -128,16 +131,7 @@ public class HandClass
 
 
 
-    public List<string> getCardNums(List<string> inp_cards)
-    {
-        List<string> ret = new List<string>();
-        foreach (string c in inp_cards) {
-            ret.Add(c.Split('|')[0]);
-        }
-        return ret;
-    }
-
-    public List<int> getCardNums2(List<string> inp_cards)
+    public List<int> getCardNums(List<string> inp_cards)
     {
         List<int> ret = new List<int>();
         foreach (string c in inp_cards) {
@@ -146,43 +140,12 @@ public class HandClass
         return ret;
     }
 
-    public List<int> allPairs(List<string> _cards)
-    {
-        List<int> ret = new List<int>();
-        List<string> num_cards = getCardNums(_cards);
 
-        for (int i = 0; i <= 12; i++)
-        {
-            string s_i = Convert.ToString(i);
-            if (num_cards.FindAll( s => s.Equals(s_i) ).Count() == 2) {
-                ret.Add(i);
-            }
-        }
-        return ret;
-    }
-
-    public List<List<string>> allPairs2(List<string> _cards)
-    {
-        List<List<string>> ret = new List<List<string>>();
-        List<string> num_cards = getCardNums(_cards);
-
-        //_cards.Fin
-
-        for (int i = 0; i <= 12; i++)
-        {
-            string s_i = Convert.ToString(i);
-            if (num_cards.FindAll( s => s.Equals(s_i) ).Count() == 2) {
-                ret.Add( num_cards.FindAll( s => s.Equals(s_i) ) );
-            }
-        }
-        return ret;
-    }
-
-    public Tuple<int,List<int>> allPairs3(List<string> _cards)
+    public Tuple<int,List<int>> allPairs(List<string> _cards)
     {
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
         
-        List<int> num_cards = getCardNums2(_cards);
+        List<int> num_cards = getCardNums(_cards);
 
         for (int i = 0; i <= 12; i++)
         {   
@@ -196,17 +159,21 @@ public class HandClass
         return ret;
     }
 
-    public List<int> allTrips(List<string> _cards)
+
+
+    public Tuple<int,List<int>> allTrips(List<string> _cards)
     {
-        List<int> ret = new List<int>();
-        List<string> num_cards = getCardNums(_cards);
+        Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
+        
+        List<int> num_cards = getCardNums(_cards);
 
         for (int i = 0; i <= 12; i++)
-        {
-            string s_i =Convert.ToString(i);
-            
-            if (num_cards.FindAll( s => s.Equals(s_i) ).Count() == 3) {
-                ret.Add(i);
+        {   
+            if (num_cards.FindAll( s => s == i ).Count() == 3) {
+                
+                List<int> kickers = num_cards.FindAll( s => s != i );
+                List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
+                ret = Tuple.Create( i , descKickers  );
             }
         }
         return ret;
