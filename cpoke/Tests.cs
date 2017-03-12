@@ -69,6 +69,10 @@ namespace PokerApplication
         tx = TestNotEvenPair(cards, cards2, -1, hc );
         ResultsUtil(tx, print);
 
+    //Test Trips
+        cards = new List<string> {"2|3","1|2"};
+        cards2 = new List<string> {"1|1","1|3","4|2","5|2","6|1"};
+        tx = 
         //TestArrayInit();
 
     //Build the kicker module...
@@ -101,7 +105,7 @@ namespace PokerApplication
                                       HandClass inp_hc )
         {
             
-            var _hs = inp_hc.evaluateHands2(inp_holeCards,inp_commonCards);
+            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
             return _hs.Item1 == exp_result;
             
         }
@@ -111,15 +115,27 @@ namespace PokerApplication
                                         int exp_result,
                                         HandClass inp_hc )
         {
-            var _hs = inp_hc.evaluateHands2(inp_holeCards,inp_commonCards);
+            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
 
             bool isPair = _hs.Item1 == (int) HandClass.HandStrength.Pair;
 
             if (isPair) return _hs.Item2 == exp_result;
             return false;
-            
         }
 
+        public bool TestIgnoreLowPair(List<string> inp_holeCards,
+                                      List<string> inp_commonCards,
+                                        int exp_result,
+                                        HandClass inp_hc )
+        {
+            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+
+            bool isPair = _hs.Item1 == (int) HandClass.HandStrength.Pair;
+
+            if (isPair) return _hs.Item2 == exp_result;
+            return false;
+
+        }
             
         public bool TestPairs(List<string> inp_cards,
                               int exp_result,

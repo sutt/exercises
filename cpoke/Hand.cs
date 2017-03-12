@@ -70,7 +70,7 @@ public class HandClass
         StraightFlush
     }            
 
-    public Tuple<int,int,List<int>> evaluateHands2( List<string> holeCards, 
+    public Tuple<int,int,List<int>> evaluateHands( List<string> holeCards, 
                                                     List<string> commonCards)
     {
         //returns: int best-hand-type, the int of highest HandStrength of all possible hands
