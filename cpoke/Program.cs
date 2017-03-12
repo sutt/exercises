@@ -48,7 +48,7 @@ namespace PokerApplication
             
             List<List<string>> hands = H.allHands(holeCards, commonCards);
 
-            var temp = H.evaluateHands2(holeCards,commonCards);
+            var temp = H.evaluateHands(holeCards,commonCards);
             
             List<int> _ns = new List<int>() {6, 8, 20};         
             foreach (int _n in _ns)

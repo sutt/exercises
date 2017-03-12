@@ -87,3 +87,16 @@ to break from static void Main()
     just "return;"
 
 dotnet test is a mess but an option
+
+3.12.17
+
+LinqPad
+
+Linqpad
+lprun.exe
+http://www.linqpad.net/Download.aspx
+
+interactive console, also in vs2015
+https://github.com/zabirauf/icsharp
+
+

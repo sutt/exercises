@@ -25,6 +25,7 @@ namespace PokerApplication
 
         List<string> cards;
         List<string> cards2;
+        //List<string> cards3;
 
         Results = new List<Tuple<int,bool>>();
         bool tx;
@@ -71,16 +72,31 @@ namespace PokerApplication
 
     //Test Trips
         cards = new List<string> {"2|3","1|2"};
-        cards2 = new List<string> {"1|1","1|3","4|2","5|2","6|1"};
-        tx = 
+        cards2 = new List<string> {"1|1","1|3","2|2","5|2","6|1"};
+        tx = TestTrips(cards,cards2,1,hc);
+        ResultsUtil(tx, print);
         //TestArrayInit();
 
+    //Test Kickers
+    cards = new List<string> {"2|3","5|1"};    
+    cards2 = new List<string> {"5|1","6|3","7|2","4|2","11|1"};    
+    tx = TestKickers(cards,cards2,11,0,hc);
+    ResultsUtil(tx, print);
+
+    tx = TestKickers(cards,cards2,7,1,hc);
+    ResultsUtil(tx, print);
+
+    tx = TestKickers(cards,cards2,6,2,hc);
+    ResultsUtil(tx, print);
+
+
     //Build the kicker module...
-    Logging L = new Logging();
+    //Logging L = new Logging();
+    //cards = new List<string> {"2|3","1|2"};    
     //cards2 = new List<string> {"5|1","6|3","7|2","5|2","11|1"};
-    //List<List<string>> DemIn = hc.allPairs2(cards2);
-    //Console.WriteLine("The FivePair:");
-    //L.PrintOutList(DemIn);            
+    //Tuple<int, List<int>> DemIn = hc.allPairs(cards2);
+    //Console.WriteLine("The Kickers:");
+    //L.PrintOut(DemIn.Item2);            
 
     Console.WriteLine(" ----------------------------------------------------- ");
 
@@ -88,7 +104,28 @@ namespace PokerApplication
         return 1;
     }
 
-        
+        public bool TestKickers(  List<string> inp_holeCards,
+                                      List<string> inp_commonCards,
+                                      int kicker_val,
+                                      int kicker_ind,
+                                      HandClass inp_hc )
+        {
+            
+            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+            
+            List<int> kickers = _hs.Item3;
+            int ki;
+            
+            try {
+                ki = kickers[kicker_ind];
+            } 
+            catch {
+                return false;
+            }
+            
+            return (ki == kicker_val);
+        }
+
 
         public void ResultsUtil(bool x, bool print = false)
         {
@@ -123,16 +160,18 @@ namespace PokerApplication
             return false;
         }
 
-        public bool TestIgnoreLowPair(List<string> inp_holeCards,
-                                      List<string> inp_commonCards,
-                                        int exp_result,
-                                        HandClass inp_hc )
+        public bool TestTrips(List<string> inp_holeCards,
+                                List<string> inp_commonCards,
+                                int exp_result,
+                                HandClass inp_hc )
         {
             var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
 
-            bool isPair = _hs.Item1 == (int) HandClass.HandStrength.Pair;
+            bool isTrips = _hs.Item1 == (int) HandClass.HandStrength.Trips;
 
-            if (isPair) return _hs.Item2 == exp_result;
+            bool isNumber =  _hs.Item2 == exp_result;
+            
+            if (isTrips & isNumber) return true;
             return false;
 
         }
