@@ -178,13 +178,8 @@ public class HandClass
         
     }
 
-        private static List<int> NewMethod(List<int>[] _hsKicker)
-        {
-            return _hsKicker[(int)HandStrength.Pair];
-        }
 
-
-        public List<int> getCardNums(List<string> inp_cards)
+    public List<int> getCardNums(List<string> inp_cards)
     {
         List<int> ret = new List<int>();
         foreach (string c in inp_cards) {
@@ -196,14 +191,18 @@ public class HandClass
 
     public Tuple<int,List<int>> highNSet(List<string> _cards, int N)
     {
+        //Returns Tuple( card-rank, List-of-kickers)
+        //      highest card-rank where _cards have an N-set, e.g N=2 is pair
+        //      List of kickers as integers in descending order
+
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
         
         List<int> num_cards = getCardNums(_cards);
 
         for (int i = 0; i <= 12; i++)
         {   
-            if (num_cards.FindAll( s => s == i ).Count() == N) {
-                
+            if (num_cards.FindAll( s => s == i ).Count() == N) 
+            {
                 List<int> kickers = num_cards.FindAll( s => s != i );
                 List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
                 ret = Tuple.Create( i , descKickers  );
