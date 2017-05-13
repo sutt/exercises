@@ -70,6 +70,25 @@ public class HandClass
         StraightFlush
     }            
 
+    
+    public List<int>[] CompareKickers( List<int>[] kickers,
+                                       List<int> inputKickers,
+                                       int indexHs )
+    {
+        if (kickers[indexHs] == (null))
+        {
+            kickers[indexHs] = inputKickers;
+        }
+
+        if (betterKicker(kickers[indexHs], inputKickers))
+        {
+            kickers[indexHs] = inputKickers;
+        }
+        
+        return kickers;
+    }
+     
+
     public bool betterKicker(List<int> kick0, List<int> kick1)
     {
         int len = Math.Max( kick0.Count, kick1.Count );
@@ -111,46 +130,25 @@ public class HandClass
             
             Tuple<int,List<int>> pairHand = allPairs(_hand);
             if (pairHand.Item1 > -1)
-                {
-
-                    //Track the highest pair
-                    _hs[(int)HandStrength.Pair] = Math.Max(pairHand.Item1,
-                                                            _hs[(int)HandStrength.Pair]);
-                    
-
-                    //Track the best kickers
-                    if (_hsKicker[(int)HandStrength.Pair] == (null))
-                    {
-                        _hsKicker[(int)HandClass.HandStrength.Pair] = pairHand.Item2;
-                    }
-
-                    if (betterKicker(_hsKicker[(int)HandStrength.Pair], pairHand.Item2))
-                    {
-                        _hsKicker[(int)HandClass.HandStrength.Pair] = pairHand.Item2;
-                    }
-
-                }
-
+            {
+                //Track the highest pair
+                _hs[(int)HandStrength.Pair] = Math.Max(pairHand.Item1,
+                                                        _hs[(int)HandStrength.Pair]);
+                
+                //Track the best kickers
+                _hsKicker = CompareKickers(_hsKicker, pairHand.Item2, (int)HandStrength.Pair );
+            }
 
 
             Tuple<int,List<int>> tripHand = allTrips(_hand);
-            if (tripHand.Item1 > -1) {
-                
+            if (tripHand.Item1 > -1) 
+            {
                 //Track the highest trip
                 _hs[(int)HandStrength.Trips] = Math.Max(tripHand.Item1, 
                                                         _hs[(int)HandStrength.Trips]);
                 
                 //Track the best kickers
-                    if (_hsKicker[(int)HandStrength.Trips] == (null))
-                    {
-                        _hsKicker[(int)HandClass.HandStrength.Trips] = tripHand.Item2;
-                    }
-
-                    if (betterKicker(_hsKicker[(int)HandStrength.Trips], tripHand.Item2))
-                    {
-                        _hsKicker[(int)HandClass.HandStrength.Trips] = tripHand.Item2;
-                    }
-                
+                _hsKicker = CompareKickers(_hsKicker, tripHand.Item2, (int)HandStrength.Trips );
             }
             
             
