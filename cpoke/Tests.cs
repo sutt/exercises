@@ -78,16 +78,30 @@ namespace PokerApplication
         //TestArrayInit();
 
     //Test Kickers
-    cards = new List<string> {"2|3","5|1"};    
-    cards2 = new List<string> {"5|1","6|3","7|2","4|2","11|1"};    
-    tx = TestKickers(cards,cards2,11,0,hc);
-    ResultsUtil(tx, print);
+        cards = new List<string> {"2|3","5|1"};    
+        cards2 = new List<string> {"5|1","6|3","7|2","4|2","11|1"};    
+        
+        tx = TestKickers(cards,cards2,11,0,hc);
+        ResultsUtil(tx, print);
 
-    tx = TestKickers(cards,cards2,7,1,hc);
-    ResultsUtil(tx, print);
+        tx = TestKickers(cards,cards2,7,1,hc);
+        ResultsUtil(tx, print);
 
-    tx = TestKickers(cards,cards2,6,2,hc);
-    ResultsUtil(tx, print);
+        tx = TestKickers(cards,cards2,6,2,hc);
+        ResultsUtil(tx, print);
+
+        //test kickers with trips
+        cards = new List<string> {"2|3","1|2"};
+        cards2 = new List<string> {"1|1","1|3","2|2","5|2","6|1"};
+
+        tx = TestKickers(cards,cards2,6,0,hc);
+        ResultsUtil(tx, print);
+
+        tx = TestKickers(cards,cards2,6,1,hc);
+        ResultsUtil(tx, print);
+
+        tx = TestKickers(cards,cards2,5,1,hc);
+        ResultsUtil(tx, print);
 
 
     //Build the kicker module...

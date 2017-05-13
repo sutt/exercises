@@ -78,12 +78,9 @@ public class HandClass
         
         for (int i = 0; i < len; i++) 
         {
-            try {
-            if (kick1[i] > kick0[i]) return true;
-            }
-            catch {
-                return false;   //if they're unequal lengths
-            }
+            try { if (kick1[i] > kick0[i]) return true;}
+            catch { return false; }   //if they're unequal lengths
+            
         }
         return false;
     }
@@ -118,8 +115,11 @@ public class HandClass
 
                     _hs[(int)HandStrength.Pair] = Math.Max(pairHand.Item1,
                                                             _hs[(int)HandStrength.Pair]);
-                    List<int> _qq = NewMethod(_hsKicker);
-                    if (_qq == (null))
+                    
+                    
+                    //List<int> _qq = NewMethod(_hsKicker);
+                    //if (_qq == (null))
+                    if (_hsKicker[(int)HandStrength.Pair] == (null))
                     {
                         _hsKicker[(int)HandClass.HandStrength.Pair] = pairHand.Item2;
                     }
