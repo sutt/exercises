@@ -143,8 +143,25 @@ public class HandClass
                 _hs[(int)HandStrength.Trips] = Math.Max(tripHand.Item1, 
                                                         _hs[(int)HandStrength.Trips]);
                 
+                //BUG?: Better kicker but lower pair?
                 //Track the best kickers
                 _hsKicker = CompareKickers(_hsKicker, tripHand.Item2, (int)HandStrength.Trips );
+            }
+            
+            //TODO: twopair
+
+            //TODO: highNMSetRank(_hand, N, M); need kick for twopair
+
+            //Tuple<int,List<int>> houseHand = highHouse(_hand);
+            Tuple<int,List<int>> houseHand = highHouse(_hand);
+            if (houseHand.Item1 > -1)
+            {
+                //Track the highest full house
+                _hs[(int)HandStrength.FullHouse] = Math.Max(houseHand.Item1, 
+                                                    _hs[(int)HandStrength.FullHouse]);
+                    
+                _hsKicker = CompareKickers(_hsKicker, houseHand.Item2, (int)HandStrength.FullHouse);
+                
             }
             
 
@@ -218,6 +235,37 @@ public class HandClass
         }
         return ret;
     }
+    
+    public Tuple<int,List<int>> highHouse(List<string> _cards)
+    {
+        //Returns Tuple( house-rank, List-of-kickers)
+        //      highest card-rank where _cards have an N-set, e.g N=2 is pair
+        //      empty List<int>, full house has no kickers
+
+        Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
+        
+        Tuple<int,List<int>> houseHand = highNSet(_cards, 3);
+            if (houseHand.Item1 > -1)
+            {
+                int tripOfHouse = houseHand.Item1;
+                
+                List<string> remainingCards = new List<string>();
+                foreach (int i_card in houseHand.Item2)
+                {
+                    remainingCards.Add(  Convert.ToString(i_card) );
+                }
+                
+                Tuple<int,List<int>> houseHand2 = highNSet(remainingCards, 2);
+                if (houseHand2.Item1 > -1)
+                {
+                    int pairOfHouse = houseHand2.Item1;
+                    int houseRank = 100*tripOfHouse + pairOfHouse;
+                    ret = Tuple.Create(houseRank, new List<int>());
+                }
+            }
+        return ret;
+    }
+
 
 }
 }
