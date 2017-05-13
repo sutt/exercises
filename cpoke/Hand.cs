@@ -144,6 +144,7 @@ public class HandClass
                                                         _hs[(int)HandStrength.Trips]);
                 
                 //BUG?: Better kicker but lower pair?
+                // ->if hs(i) >= hs(current) then comparekicker(kickers(i))
                 //Track the best kickers
                 _hsKicker = CompareKickers(_hsKicker, tripHand.Item2, (int)HandStrength.Trips );
             }

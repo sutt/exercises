@@ -72,6 +72,10 @@ namespace PokerApplication
 
     //Test TwoPair
 
+        //bug where high kicker stays on high twopair
+        // eg 2's and 6's processes, 7 kicker; 
+        //then 2 and 7's is found but 7 remains kicker
+
     //Test Trips
         cards = new List<string> {"0|3","1|2"};
         cards2 = new List<string> {"1|1","1|3","2|2","5|2","6|1"};
@@ -112,18 +116,21 @@ namespace PokerApplication
         tx = TestKickers(cards,cards2,6,2,hc);
         ResultsUtil(tx, print);
 
-    //BUG?
-        //Better kicker but on a lower [two]pair bug?
-        /*
-        cards = new List<string> {"2|3","5|1"};    
-        cards2 = new List<string> {"5|1","6|3","7|2","4|2","11|1"};    
-        tx = TestKickers(cards,cards2,11,0,hc);
+    
+        //BUG? - Better kicker but on a lower [two]pair bug?
+        cards = new List<string> {"2|3","2|1"};    
+        cards2 = new List<string> {"5|1","1|3","3|2","4|2","5|1"};    
+        tx = TestKickers(cards,cards2,4,0,hc);
         ResultsUtil(tx, print);
-        cards = new List<string> {"2|3","5|1"};    
-        cards2 = new List<string> {"5|1","6|3","7|2","4|2","11|1"};    
-        tx = TestKickers(cards,cards2,11,0,hc);
+        cards = new List<string> {"5|3","5|1"};    
+        cards2 = new List<string> {"2|1","1|3","3|2","4|2","2|1"};    
+        tx = TestKickers(cards,cards2,4,0,hc);
         ResultsUtil(tx, print);
-        */
+        cards = new List<string> {"5|3","5|1"};    
+        cards2 = new List<string> {"2|1","1|3","3|2","2|2","4|1"};    
+        tx = TestKickers(cards,cards2,4,0,hc);
+        ResultsUtil(tx, print);
+        
 
         //test kickers with trips
         cards = new List<string> {"2|3","1|2"};
