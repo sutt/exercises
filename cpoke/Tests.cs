@@ -92,16 +92,17 @@ namespace PokerApplication
 
         //test kickers with trips
         cards = new List<string> {"2|3","1|2"};
-        cards2 = new List<string> {"1|1","1|3","2|2","5|2","6|1"};
+        cards2 = new List<string> {"1|1","1|3","3|2","5|2","6|1"};
 
         tx = TestKickers(cards,cards2,6,0,hc);
         ResultsUtil(tx, print);
 
-        tx = TestKickers(cards,cards2,6,1,hc);
-        ResultsUtil(tx, print);
-
         tx = TestKickers(cards,cards2,5,1,hc);
         ResultsUtil(tx, print);
+
+        //trips dont have a thrid kicker, tx should be false
+        tx = TestKickers(cards,cards2,3,2,hc);
+        ResultsUtil(!tx, print);
 
 
     //Build the kicker module...

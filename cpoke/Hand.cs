@@ -113,12 +113,12 @@ public class HandClass
             if (pairHand.Item1 > -1)
                 {
 
+                    //Track the highest pair
                     _hs[(int)HandStrength.Pair] = Math.Max(pairHand.Item1,
                                                             _hs[(int)HandStrength.Pair]);
                     
-                    
-                    //List<int> _qq = NewMethod(_hsKicker);
-                    //if (_qq == (null))
+
+                    //Track the best kickers
                     if (_hsKicker[(int)HandStrength.Pair] == (null))
                     {
                         _hsKicker[(int)HandClass.HandStrength.Pair] = pairHand.Item2;
@@ -136,9 +136,21 @@ public class HandClass
             Tuple<int,List<int>> tripHand = allTrips(_hand);
             if (tripHand.Item1 > -1) {
                 
+                //Track the highest trip
                 _hs[(int)HandStrength.Trips] = Math.Max(tripHand.Item1, 
                                                         _hs[(int)HandStrength.Trips]);
-                _kickers = pairHand.Item2;
+                
+                //Track the best kickers
+                    if (_hsKicker[(int)HandStrength.Trips] == (null))
+                    {
+                        _hsKicker[(int)HandClass.HandStrength.Trips] = tripHand.Item2;
+                    }
+
+                    if (betterKicker(_hsKicker[(int)HandStrength.Trips], tripHand.Item2))
+                    {
+                        _hsKicker[(int)HandClass.HandStrength.Trips] = tripHand.Item2;
+                    }
+                
             }
             
             
