@@ -77,6 +77,14 @@ namespace PokerApplication
         ResultsUtil(tx, print);
         //TestArrayInit();
 
+    //Test FourOfAKind
+        cards = new List<string> {"2|3","2|2"};
+        cards2 = new List<string> {"1|1","1|3","2|0","2|2","6|1"};
+        tx = TestFourOfAKind(cards,cards2,2,hc);
+        ResultsUtil(tx, print);
+        tx = TestFourOfAKind(cards,cards2,6,hc);
+        ResultsUtil(!tx, print);
+
     //Test Kickers
         cards = new List<string> {"2|3","5|1"};    
         cards2 = new List<string> {"5|1","6|3","7|2","4|2","11|1"};    
@@ -100,9 +108,16 @@ namespace PokerApplication
         tx = TestKickers(cards,cards2,5,1,hc);
         ResultsUtil(tx, print);
 
-        //trips dont have a thrid kicker, tx should be false
         tx = TestKickers(cards,cards2,3,2,hc);
-        ResultsUtil(!tx, print);
+        ResultsUtil(!tx, print);    //trips dont have a thrid kicker, tx should be false
+
+        //test kickers with fourofakind
+        cards = new List<string> {"2|3","2|2"};
+        cards2 = new List<string> {"1|1","3|3","2|0","2|2","6|1"};
+        tx = TestKickers(cards,cards2,6,0,hc);
+        ResultsUtil(tx, print);
+        tx = TestKickers(cards,cards2,3,1,hc);
+        ResultsUtil(!tx, print);     //quads dont have a 2nd kicker
 
 
     //Build the kicker module...
@@ -183,6 +198,22 @@ namespace PokerApplication
             var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
 
             bool isTrips = _hs.Item1 == (int) HandClass.HandStrength.Trips;
+
+            bool isNumber =  _hs.Item2 == exp_result;
+            
+            if (isTrips & isNumber) return true;
+            return false;
+
+        }
+
+        public bool TestFourOfAKind(List<string> inp_holeCards,
+                                    List<string> inp_commonCards,
+                                    int exp_result,
+                                    HandClass inp_hc )
+        {
+            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+
+            bool isTrips = _hs.Item1 == (int) HandClass.HandStrength.FourOfAKind;
 
             bool isNumber =  _hs.Item2 == exp_result;
             

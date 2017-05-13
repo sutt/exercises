@@ -114,17 +114,13 @@ public class HandClass
         List<List<string>> _hands = allHands(holeCards, commonCards);
 
         int _hsLen = System.Enum.GetValues(typeof(HandStrength)).Length;
+
         int[] _hs = new int[_hsLen] ;
-        List<int>[] _hsKicker = new List<int>[_hsLen];
         for (int i = 0; i < _hsLen; i++) { _hs[i] = -1;  }
-        
-        List<int> _kickers = new List<int>();
+
+        List<int>[] _hsKicker = new List<int>[_hsLen];
 
         //TODO: these should proceed backwards, ignore processing lower hands
-        //TODO: individual hand types can be abstracted further
-        //TODO: only 5 cards in hand, so cutoff kickers after 3 cards for pair, etc.
-        //TODO: add kicker evaluation
-        //TODO: this could all be a hash lookup with preprocessing?
         foreach (List<string> _hand in _hands)
         {
             
@@ -151,6 +147,18 @@ public class HandClass
                 _hsKicker = CompareKickers(_hsKicker, tripHand.Item2, (int)HandStrength.Trips );
             }
             
+
+            Tuple<int,List<int>> quadHand = highNSet(_hand, 4);
+            if (quadHand.Item1 > -1) 
+            {
+                //Track the highest trip
+                _hs[(int)HandStrength.FourOfAKind] = Math.Max(quadHand.Item1, 
+                                                        _hs[(int)HandStrength.FourOfAKind]);
+                
+                //Track the best kickers
+                _hsKicker = CompareKickers(_hsKicker, quadHand.Item2, (int)HandStrength.FourOfAKind );
+            }
+
             
         }
 
