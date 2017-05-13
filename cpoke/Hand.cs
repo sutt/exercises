@@ -133,7 +133,7 @@ public class HandClass
 
 
 
-                Tuple<int,List<int>> tripHand = allTrips(_hand);
+            Tuple<int,List<int>> tripHand = allTrips(_hand);
             if (tripHand.Item1 > -1) {
                 
                 _hs[(int)HandStrength.Trips] = Math.Max(tripHand.Item1, 
