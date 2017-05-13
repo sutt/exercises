@@ -195,7 +195,7 @@ namespace PokerApplication
                               int exp_result,
                               HandClass inp_hc )
         {    
-            Tuple<int,List<int>> ret = inp_hc.allPairs(inp_cards);
+            Tuple<int,List<int>> ret = inp_hc.highNSet(inp_cards, 2);
             
             return (ret.Item1 == exp_result); 
             

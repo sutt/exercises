@@ -128,7 +128,7 @@ public class HandClass
         foreach (List<string> _hand in _hands)
         {
             
-            Tuple<int,List<int>> pairHand = allPairs(_hand);
+            Tuple<int,List<int>> pairHand = highNSet(_hand, 2);
             if (pairHand.Item1 > -1)
             {
                 //Track the highest pair
@@ -140,7 +140,7 @@ public class HandClass
             }
 
 
-            Tuple<int,List<int>> tripHand = allTrips(_hand);
+            Tuple<int,List<int>> tripHand = highNSet(_hand, 3);
             if (tripHand.Item1 > -1) 
             {
                 //Track the highest trip
@@ -194,7 +194,7 @@ public class HandClass
     }
 
 
-    public Tuple<int,List<int>> allPairs(List<string> _cards)
+    public Tuple<int,List<int>> highNSet(List<string> _cards, int N)
     {
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
         
@@ -202,27 +202,7 @@ public class HandClass
 
         for (int i = 0; i <= 12; i++)
         {   
-            if (num_cards.FindAll( s => s == i ).Count() == 2) {
-                
-                List<int> kickers = num_cards.FindAll( s => s != i );
-                List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
-                ret = Tuple.Create( i , descKickers  );
-            }
-        }
-        return ret;
-    }
-
-
-
-    public Tuple<int,List<int>> allTrips(List<string> _cards)
-    {
-        Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
-        
-        List<int> num_cards = getCardNums(_cards);
-
-        for (int i = 0; i <= 12; i++)
-        {   
-            if (num_cards.FindAll( s => s == i ).Count() == 3) {
+            if (num_cards.FindAll( s => s == i ).Count() == N) {
                 
                 List<int> kickers = num_cards.FindAll( s => s != i );
                 List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
