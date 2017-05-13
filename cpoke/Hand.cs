@@ -71,23 +71,42 @@ public class HandClass
     }            
 
     
-    public List<int>[] CompareKickers( List<int>[] kickers,
+    public void TrackRankAndKicker( int hsIndex,
+                                    Tuple<int,List<int>> inputHand,
+                                    ref int[] globalHS, 
+                                    ref List<int>[] globalKickers )
+    {
+        int _rank = inputHand.Item1;
+        int currentRank = globalHS[hsIndex];
+        if (_rank > currentRank) 
+        {
+            globalHS[hsIndex] = _rank;
+            globalKickers = CompareKickers2(true,globalKickers, inputHand.Item2, hsIndex);
+        }
+        if (_rank == currentRank) 
+        {
+            globalKickers = CompareKickers2(false,globalKickers, inputHand.Item2, hsIndex);
+        }
+        
+    }
+
+    public List<int>[] CompareKickers2( bool higherRank,
+                                       List<int>[] kickers,
                                        List<int> inputKickers,
                                        int indexHs )
     {
-        if (kickers[indexHs] == (null))
+        if ( (kickers[indexHs] == (null)) | higherRank)
         {
             kickers[indexHs] = inputKickers;
         }
-
         if (betterKicker(kickers[indexHs], inputKickers))
         {
             kickers[indexHs] = inputKickers;
         }
-        
         return kickers;
     }
      
+
 
     public bool betterKicker(List<int> kick0, List<int> kick1)
     {
@@ -120,63 +139,38 @@ public class HandClass
 
         List<int>[] _hsKicker = new List<int>[_hsLen];
 
-        //TODO: these should proceed backwards, ignore processing lower hands
+        
+        Tuple<int,List<int>> myHand;
+
         foreach (List<string> _hand in _hands)
         {
             
-            Tuple<int,List<int>> pairHand = highNSet(_hand, 2);
-            if (pairHand.Item1 > -1)
+            myHand = highNSet(_hand, 2);
+            if (myHand.Item1 > -1) 
             {
-                //Track the highest pair
-                _hs[(int)HandStrength.Pair] = Math.Max(pairHand.Item1,
-                                                        _hs[(int)HandStrength.Pair]);
-                
-                //Track the best kickers
-                _hsKicker = CompareKickers(_hsKicker, pairHand.Item2, (int)HandStrength.Pair );
-            }
-
-
-            Tuple<int,List<int>> tripHand = highNSet(_hand, 3);
-            if (tripHand.Item1 > -1) 
-            {
-                //Track the highest trip
-                _hs[(int)HandStrength.Trips] = Math.Max(tripHand.Item1, 
-                                                        _hs[(int)HandStrength.Trips]);
-                
-                //BUG?: Better kicker but lower pair?
-                // ->if hs(i) >= hs(current) then comparekicker(kickers(i))
-                //Track the best kickers
-                _hsKicker = CompareKickers(_hsKicker, tripHand.Item2, (int)HandStrength.Trips );
+                TrackRankAndKicker( (int)HandStrength.Pair, myHand,ref _hs, ref _hsKicker); 
             }
             
+            myHand = highNSet(_hand, 3);
+            if (myHand.Item1 > -1) 
+            {
+                TrackRankAndKicker( (int)HandStrength.Trips, myHand,ref _hs, ref _hsKicker); 
+            }
+
             //TODO: twopair
-
             //TODO: highNMSetRank(_hand, N, M); need kick for twopair
-
             //Tuple<int,List<int>> houseHand = highHouse(_hand);
-            Tuple<int,List<int>> houseHand = highHouse(_hand);
-            if (houseHand.Item1 > -1)
+            myHand = highHouse(_hand);
+            if (myHand.Item1 > -1) 
             {
-                //Track the highest full house
-                _hs[(int)HandStrength.FullHouse] = Math.Max(houseHand.Item1, 
-                                                    _hs[(int)HandStrength.FullHouse]);
-                    
-                _hsKicker = CompareKickers(_hsKicker, houseHand.Item2, (int)HandStrength.FullHouse);
-                
+                TrackRankAndKicker( (int)HandStrength.FullHouse, myHand,ref _hs, ref _hsKicker); 
             }
             
-
-            Tuple<int,List<int>> quadHand = highNSet(_hand, 4);
-            if (quadHand.Item1 > -1) 
+            myHand = highNSet(_hand, 4);
+            if (myHand.Item1 > -1) 
             {
-                //Track the highest trip
-                _hs[(int)HandStrength.FourOfAKind] = Math.Max(quadHand.Item1, 
-                                                        _hs[(int)HandStrength.FourOfAKind]);
-                
-                //Track the best kickers
-                _hsKicker = CompareKickers(_hsKicker, quadHand.Item2, (int)HandStrength.FourOfAKind );
+                TrackRankAndKicker( (int)HandStrength.FourOfAKind, myHand,ref _hs, ref _hsKicker); 
             }
-
             
         }
 
