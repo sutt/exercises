@@ -251,8 +251,8 @@ public class HandClass
     public Tuple<int,List<int>> highNMSetRank(List<string> _cards, int N, int M)
     {
         //Returns Tuple( house-rank, List-of-kickers)
-        //      highest card-rank where _cards have an N-set, e.g N=2 is pair
-        //      empty List<int>, full house has no kickers
+        //      highest card-rank where _cards have an N-set and an M-set
+        //      kickers only if if N+M < cards
 
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
 
