@@ -58,6 +58,22 @@ namespace PokerApplication
         ResultsUtil(tx, print);
         //TestArrayInit();
 
+    //Test Straight
+        cards = new List<string> {"0|2","1|3"};
+        cards2 = new List<string> {"2|2","3|3","4|2","7|0","8|0"};
+        tx = TestHand(cards,cards2,4,hc,HandClass.HandStrength.Straight);
+        ResultsUtil(tx, print);
+
+        cards = new List<string> {"0|2","1|3"};
+        cards2 = new List<string> {"2|2","3|3","9|2","7|0","12|0"};
+        tx = TestHand(cards,cards2,3,hc,HandClass.HandStrength.Straight);
+        ResultsUtil(tx, print);
+
+        cards = new List<string> {"12|2","1|2"};
+        cards2 = new List<string> {"11|2","10|3","9|2","8|0","12|1"};
+        tx = TestHand(cards,cards2,12,hc,HandClass.HandStrength.Straight);
+        ResultsUtil(tx, print);
+
     //Test Flush
         cards = new List<string> {"0|2","1|2"};
         cards2 = new List<string> {"1|2","1|3","2|2","5|2","6|2"};
@@ -104,14 +120,14 @@ namespace PokerApplication
 
         //BUG? - Better kicker but on a lower [two]pair bug?
         cards = new List<string> {"2|3","2|1"};    
-        cards2 = new List<string> {"5|1","1|3","3|2","4|2","5|1"};    
+        cards2 = new List<string> {"6|1","0|3","3|2","4|2","6|1"};    
         tx = TestKickers(cards,cards2,4,0,hc);
         ResultsUtil(tx, print);
-        cards = new List<string> {"5|3","5|1"};    
-        cards2 = new List<string> {"2|1","1|3","3|2","4|2","2|1"};    
+        cards = new List<string> {"6|3","6|1"};    
+        cards2 = new List<string> {"2|1","0|3","3|2","4|2","2|1"};    
         tx = TestKickers(cards,cards2,4,0,hc);
         ResultsUtil(tx, print);
-        cards = new List<string> {"5|3","5|1"};    
+        cards = new List<string> {"6|3","6|1"};    
         cards2 = new List<string> {"2|1","1|3","3|2","2|2","4|1"};    
         tx = TestKickers(cards,cards2,4,0,hc);
         ResultsUtil(tx, print);

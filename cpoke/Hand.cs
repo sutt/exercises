@@ -127,8 +127,8 @@ public class HandClass
                                                     List<string> commonCards)
     {
         //returns: int best-hand-type, the int of highest HandStrength of all possible hands
-        //          int type-rank: highest , high card for flush and straight, card-of for n-of-a-kind
-        //          List<int> kickers: remaining cards not used, ordered highest ton lowest                      
+        //          int type-rank: highest, high card for straight,ca code for n,m  n-of-a-kind, 100*trip-in-fullhouse+pair-in-fullhouse
+        //          List<int> kickers: remaining cards not used, ordered highest ton lowest,                       
         
         List<List<string>> _hands = allHands(holeCards, commonCards);
 
@@ -163,6 +163,18 @@ public class HandClass
                 TrackRankAndKicker( (int)HandStrength.Trips, myHand,ref _hs, ref _hsKicker); 
             }
             
+            myHand = runOfN(_hand,5);
+            if (myHand.Item1 > -1) 
+            {
+                TrackRankAndKicker( (int)HandStrength.Straight, myHand,ref _hs, ref _hsKicker); 
+            }
+            
+            myHand = runOfN(aceLow(_hand),5);
+            if (myHand.Item1 > -1) 
+            {
+                TrackRankAndKicker( (int)HandStrength.Straight, myHand,ref _hs, ref _hsKicker); 
+            }
+
             myHand = matchSuit(_hand, 5);
             if (myHand.Item1 > -1) 
             {
@@ -181,6 +193,9 @@ public class HandClass
                 TrackRankAndKicker( (int)HandStrength.FourOfAKind, myHand,ref _hs, ref _hsKicker); 
             }
             
+            //myHand = matchSuit(_hand, 5);
+            //if myHand the if straight
+
         }
 
         int _topHand = -1;
@@ -226,6 +241,21 @@ public class HandClass
         return ret;
     }
 
+    public List<string> aceLow(List<string> inp_cards)
+    {
+        List<string> ret = new List<string>();
+        foreach (string s in inp_cards) {
+            string num = s.Split('|')[0];
+            string suit = s.Split('|')[1];
+            if (num == "12") {
+                ret.Add("-1"+"|"+suit );
+            } else {
+                ret.Add(num+"|"+suit );
+            }
+        }
+        return ret;
+    }
+
     public Tuple<int,List<int>> highNSet(List<string> _cards, int N)
     {
         //Returns Tuple( card-rank, List-of-kickers)
@@ -253,6 +283,7 @@ public class HandClass
         //Returns Tuple( house-rank, List-of-kickers)
         //      highest card-rank where _cards have an N-set and an M-set
         //      kickers only if if N+M < cards
+        //      for two pair, tripofhouse will be higher of the pairs, thus being the 100x in the code
 
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
 
@@ -302,6 +333,33 @@ public class HandClass
                 List<int> kickers = getCardNums(_cards); 
                 List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
                 ret = Tuple.Create( 0 , descKickers  );
+            }
+        }
+        return ret;
+    }
+
+    public Tuple<int,List<int>> runOfN(List<string> _cards, int N)
+    {
+        //Returns Tuple( card-rank, List-of-kickers)
+        //      highest card-rank where highest of straight is returned as rank
+        //      empty list of kickers 
+
+        Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
+        
+        List<int> num_cards = getCardNums(_cards);
+
+        for (int i = -1; i <= 12+1-N; i++)
+        {   
+            bool[] running = new bool[N];
+            for (int j = 0; j < N; j++)
+            {
+                if (num_cards.FindAll( s => s == i + j ).Count() == 1) running[j] = true;
+            }
+            if (running.All(e => e == true))
+            {
+                List<int> kickers = num_cards;
+                List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
+                ret = Tuple.Create( i + N -1 , descKickers  );
             }
         }
         return ret;
