@@ -42,26 +42,11 @@ namespace PokerApplication
         tx = TestPairs(cards, -1, hc );
         ResultsUtil(tx, print);
 
-    //Ignore Lower pair - 2's over 1's
-        cards = new List<string> {"1|3","2|2"};
-        cards2 = new List<string> {"2|1","1|2","4|2","5|2","6|1"};
-        tx = TestIgnoreLowPair(cards, cards2, 2, hc );
-        ResultsUtil(tx, print);
-
-        cards = new List<string> {"2|3","1|2"};
-        cards2 = new List<string> {"2|1","1|2","4|2","5|2","6|1"};
-        tx = TestIgnoreLowPair(cards, cards2, 2, hc );
-        ResultsUtil(tx, print);
-
-        cards = new List<string> {"2|3","1|2"};
-        cards2 = new List<string> {"1|1","2|2","4|2","5|2","6|1"};
-        tx = TestIgnoreLowPair(cards, cards2, 2, hc );
-        ResultsUtil(tx, print);
-
+    
     //Trips, not a pair, should return tx=false
         cards = new List<string> {"2|3","1|2"};
         cards2 = new List<string> {"1|1","1|3","4|2","5|2","6|1"};
-        tx = TestIgnoreLowPair(cards, cards2, 2, hc );
+        tx = TestIgnoreLowPair(cards, cards2, 2, hc , false);
         ResultsUtil(!tx, print);
     
     //Crappola, not even a pair
@@ -71,10 +56,10 @@ namespace PokerApplication
         ResultsUtil(tx, print);
 
     //Test TwoPair
-
-        //bug where high kicker stays on high twopair
-        // eg 2's and 6's processes, 7 kicker; 
-        //then 2 and 7's is found but 7 remains kicker
+        cards = new List<string> {"0|3","1|2"};
+        cards2 = new List<string> {"1|1","0|3","2|2","5|2","6|1"};
+        tx = TestTwoPair(cards,cards2,(100*1) + 0,hc);
+        ResultsUtil(tx, print);
 
     //Test Trips
         cards = new List<string> {"0|3","1|2"};
@@ -116,7 +101,11 @@ namespace PokerApplication
         tx = TestKickers(cards,cards2,6,2,hc);
         ResultsUtil(tx, print);
 
-    
+        cards = new List<string> {"0|3","1|2"};
+        cards2 = new List<string> {"1|1","0|3","2|2","5|2","6|1"};
+        tx = TestKickers(cards,cards2,6,0,hc);
+        ResultsUtil(tx, print);
+
         //BUG? - Better kicker but on a lower [two]pair bug?
         cards = new List<string> {"2|3","2|1"};    
         cards2 = new List<string> {"5|1","1|3","3|2","4|2","5|1"};    
@@ -214,14 +203,32 @@ namespace PokerApplication
         public bool TestIgnoreLowPair(List<string> inp_holeCards,
                                       List<string> inp_commonCards,
                                         int exp_result,
-                                        HandClass inp_hc )
+                                        HandClass inp_hc,
+                                        bool handResult = true )
         {
             var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
 
             bool isPair = _hs.Item1 == (int) HandClass.HandStrength.Pair;
+            if (handResult) isPair = true;
 
             if (isPair) return _hs.Item2 == exp_result;
             return false;
+        }
+
+        public bool TestTwoPair(List<string> inp_holeCards,
+                                List<string> inp_commonCards,
+                                int exp_result,
+                                HandClass inp_hc )
+        {
+            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+
+            bool isTrips = _hs.Item1 == (int) HandClass.HandStrength.TwoPair;
+
+            bool isNumber =  _hs.Item2 == exp_result;
+            
+            if (isTrips & isNumber) return true;
+            return false;
+
         }
 
         public bool TestTrips(List<string> inp_holeCards,

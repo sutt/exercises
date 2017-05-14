@@ -151,14 +151,18 @@ public class HandClass
                 TrackRankAndKicker( (int)HandStrength.Pair, myHand,ref _hs, ref _hsKicker); 
             }
             
+            myHand = highNMSetRank(_hand,2,2);
+            if (myHand.Item1 > -1) 
+            {
+                TrackRankAndKicker( (int)HandStrength.TwoPair, myHand,ref _hs, ref _hsKicker); 
+            }
+            
             myHand = highNSet(_hand, 3);
             if (myHand.Item1 > -1) 
             {
                 TrackRankAndKicker( (int)HandStrength.Trips, myHand,ref _hs, ref _hsKicker); 
             }
 
-            //TODO: does populating the arguments take time?, worth exiting the function on -1 item1?
-            //TODO: twopair
             myHand = highNMSetRank(_hand,3,2);
             if (myHand.Item1 > -1) 
             {
@@ -240,24 +244,24 @@ public class HandClass
 
         List<int> num_cards = getCardNums(_cards);
         
-        Tuple<int,List<int>> houseHand = highNSet(_cards, N);
-            if (houseHand.Item1 > -1)
+        Tuple<int,List<int>> myHand = highNSet(_cards, N);
+            if (myHand.Item1 > -1)
             {
-                int tripOfHouse = houseHand.Item1;
+                int tripOfHouse = myHand.Item1;
                 
                 List<string> remainingCards = new List<string>();
-                foreach (int i_card in houseHand.Item2)
+                foreach (int i_card in myHand.Item2)
                 {
                     remainingCards.Add(  Convert.ToString(i_card) );
                 }
                 
-                Tuple<int,List<int>> houseHand2 = highNSet(remainingCards, 2);
-                if (houseHand2.Item1 > -1)
+                Tuple<int,List<int>> myHand2 = highNSet(remainingCards, 2);
+                if (myHand2.Item1 > -1)
                 {
-                    int pairOfHouse = houseHand2.Item1;
+                    int pairOfHouse = myHand2.Item1;
                     int houseRank = 100*tripOfHouse + pairOfHouse;
 
-                    List<int> kickers = num_cards.FindAll( s => s != pairOfHouse );
+                    List<int> kickers = myHand2.Item2.FindAll( s => s != pairOfHouse );
                     List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
                     ret = Tuple.Create(houseRank , descKickers);
                 }
