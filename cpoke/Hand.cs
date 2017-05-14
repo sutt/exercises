@@ -181,25 +181,14 @@ public class HandClass
         }
 
         int _topHand = -1;
-        for (int i = 0; i < _hsLen; i++)
-        {
-            if (_hs[i] > -1) _topHand = i;
-        }
+        for (int i = 0; i < _hsLen; i++) {if (_hs[i] > -1) _topHand = i;}
         
         int _topHandNum = -1;
         if (_topHand > -1) _topHandNum = _hs[_topHand];
 
-        //TODO: make high-card handclass index =0
-        List<int> _topKickers;
-        if (_topHand > -1) {
-             _topKickers= _hsKicker[_topHand];
-        } else {
-            _topKickers = new List<int>();
-        }
-
-        Tuple<int,int,List<int>> bestHand = 
-            Tuple.Create(_topHand,_topHandNum,_topKickers);
-
+        List<int> _topKickers= _hsKicker[_topHand];
+        
+        Tuple<int,int,List<int>> bestHand = Tuple.Create(_topHand,_topHandNum,_topKickers);
         return bestHand;
         
     }
