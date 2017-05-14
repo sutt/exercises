@@ -76,6 +76,8 @@ public class HandClass
                                     ref int[] globalHS, 
                                     ref List<int>[] globalKickers )
     {
+        if (inputHand.Item1 < 0) return;
+        
         int _rank = inputHand.Item1;
         int currentRank = globalHS[hsIndex];
         if (_rank > currentRank) 
@@ -144,60 +146,35 @@ public class HandClass
 
         foreach (List<string> _hand in _hands)
         {
-            
             myHand = highNSet(_hand, 2);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.Pair, myHand,ref _hs, ref _hsKicker); 
-            }
+            TrackRankAndKicker( (int)HandStrength.Pair, myHand,ref _hs, ref _hsKicker); 
             
             myHand = highNMSetRank(_hand,2,2);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.TwoPair, myHand,ref _hs, ref _hsKicker); 
-            }
+            TrackRankAndKicker( (int)HandStrength.TwoPair, myHand,ref _hs, ref _hsKicker); 
             
             myHand = highNSet(_hand, 3);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.Trips, myHand,ref _hs, ref _hsKicker); 
-            }
+            TrackRankAndKicker( (int)HandStrength.Trips, myHand,ref _hs, ref _hsKicker); 
             
             myHand = runOfN(_hand,5);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.Straight, myHand,ref _hs, ref _hsKicker); 
-            }
-            
+            TrackRankAndKicker( (int)HandStrength.Straight, myHand,ref _hs, ref _hsKicker); 
             myHand = runOfN(aceLow(_hand),5);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.Straight, myHand,ref _hs, ref _hsKicker); 
-            }
-
+            TrackRankAndKicker( (int)HandStrength.Straight, myHand,ref _hs, ref _hsKicker); 
+            
             myHand = matchSuit(_hand, 5);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.Flush, myHand,ref _hs, ref _hsKicker); 
-            }
+            TrackRankAndKicker( (int)HandStrength.Flush, myHand,ref _hs, ref _hsKicker); 
             
             myHand = highNMSetRank(_hand,3,2);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.FullHouse, myHand,ref _hs, ref _hsKicker); 
-            }
+            TrackRankAndKicker( (int)HandStrength.FullHouse, myHand,ref _hs, ref _hsKicker); 
             
             myHand = highNSet(_hand, 4);
-            if (myHand.Item1 > -1) 
-            {
-                TrackRankAndKicker( (int)HandStrength.FourOfAKind, myHand,ref _hs, ref _hsKicker); 
-            }
+            TrackRankAndKicker( (int)HandStrength.FourOfAKind, myHand,ref _hs, ref _hsKicker); 
             
-            myHand = matchSuitRunOfN(_hand, 5);
-            {
-                TrackRankAndKicker( (int)HandStrength.StraightFlush, myHand,ref _hs, ref _hsKicker); 
-            }
+            myHand = matchSuitRunOfN(_hand, 5); 
+            TrackRankAndKicker( (int)HandStrength.StraightFlush, myHand,ref _hs, ref _hsKicker); 
+            myHand = matchSuitRunOfN(aceLow(_hand), 5); 
+            TrackRankAndKicker( (int)HandStrength.StraightFlush, myHand,ref _hs, ref _hsKicker); 
 
+            
         }
 
         int _topHand = -1;
@@ -374,8 +351,8 @@ public class HandClass
     
         if (matchSuit(_cards,N).Item1 > -1) 
         {
-            if (runOfN(_cards, N).Item1 > -1) return runOfN(_cards, N);
-            if (runOfN(aceLow(_cards), N).Item1 > -1) return runOfN(aceLow(_cards), N);
+            return runOfN(_cards, N);
+            
         }
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
         return ret;
