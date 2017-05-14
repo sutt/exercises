@@ -159,9 +159,7 @@ public class HandClass
 
             //TODO: does populating the arguments take time?, worth exiting the function on -1 item1?
             //TODO: twopair
-            //TODO: highNMSetRank(_hand, N, M); need kick for twopair
-            //Tuple<int,List<int>> houseHand = highHouse(_hand);
-            myHand = highHouse(_hand);
+            myHand = highNMSetRank(_hand,3,2);
             if (myHand.Item1 > -1) 
             {
                 TrackRankAndKicker( (int)HandStrength.FullHouse, myHand,ref _hs, ref _hsKicker); 
@@ -232,15 +230,17 @@ public class HandClass
         return ret;
     }
     
-    public Tuple<int,List<int>> highHouse(List<string> _cards)
+    public Tuple<int,List<int>> highNMSetRank(List<string> _cards, int N, int M)
     {
         //Returns Tuple( house-rank, List-of-kickers)
         //      highest card-rank where _cards have an N-set, e.g N=2 is pair
         //      empty List<int>, full house has no kickers
 
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
+
+        List<int> num_cards = getCardNums(_cards);
         
-        Tuple<int,List<int>> houseHand = highNSet(_cards, 3);
+        Tuple<int,List<int>> houseHand = highNSet(_cards, N);
             if (houseHand.Item1 > -1)
             {
                 int tripOfHouse = houseHand.Item1;
@@ -256,11 +256,15 @@ public class HandClass
                 {
                     int pairOfHouse = houseHand2.Item1;
                     int houseRank = 100*tripOfHouse + pairOfHouse;
-                    ret = Tuple.Create(houseRank, new List<int>());
+
+                    List<int> kickers = num_cards.FindAll( s => s != pairOfHouse );
+                    List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
+                    ret = Tuple.Create(houseRank , descKickers);
                 }
             }
         return ret;
     }
+
 
 
 }
