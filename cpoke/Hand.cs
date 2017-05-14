@@ -162,7 +162,13 @@ public class HandClass
             {
                 TrackRankAndKicker( (int)HandStrength.Trips, myHand,ref _hs, ref _hsKicker); 
             }
-
+            
+            myHand = matchSuit(_hand, 5);
+            if (myHand.Item1 > -1) 
+            {
+                TrackRankAndKicker( (int)HandStrength.Flush, myHand,ref _hs, ref _hsKicker); 
+            }
+            
             myHand = highNMSetRank(_hand,3,2);
             if (myHand.Item1 > -1) 
             {
@@ -211,6 +217,14 @@ public class HandClass
         return ret;
     }
 
+    public List<int> getCardSuits(List<string> inp_cards)
+    {
+        List<int> ret = new List<int>();
+        foreach (string c in inp_cards) {
+            ret.Add( Convert.ToInt32( c.Split('|')[1]));
+        }
+        return ret;
+    }
 
     public Tuple<int,List<int>> highNSet(List<string> _cards, int N)
     {
@@ -269,7 +283,29 @@ public class HandClass
         return ret;
     }
 
+    public Tuple<int,List<int>> matchSuit(List<string> _cards, int N)
+    {
+        //Returns Tuple( 0, List-of-kickers)
+        //      any flush returns a rank of zero, all suits have equal worth
+        //      flush-high is simply all five kickers to compare to another flush
+        //      this will cause kickers to be reassesed each time a flush is found in combos
+        // edge case: board flush beats player1 but player to beats the 5th high card from board
 
+        Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
+        
+        List<int> suit_cards = getCardSuits(_cards);
+
+        for (int i = 0; i <= 3; i++)
+        {   
+            if (suit_cards.FindAll( s => s == i ).Count() == N) 
+            {
+                List<int> kickers = getCardNums(_cards); 
+                List<int> descKickers = kickers.OrderByDescending(p => p).ToList();
+                ret = Tuple.Create( 0 , descKickers  );
+            }
+        }
+        return ret;
+    }
 
 }
 }

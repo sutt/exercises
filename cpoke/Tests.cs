@@ -34,58 +34,54 @@ namespace PokerApplication
         
     //There is a pair
         cards = new List<string> {"2|3","2|2"};
-        tx = TestPairs(cards, 2, hc );
+        cards2 = new List<string> {"5|1","6|3","7|2","10|2","11|1"};
+        tx = TestHand(cards, cards2, 2, hc, HandClass.HandStrength.Pair );
         ResultsUtil(tx, print);
 
     //No Pairs
         cards = new List<string> {"1|3","2|2"};
-        tx = TestPairs(cards, -1, hc );
-        ResultsUtil(tx, print);
-
-    
-    //Trips, not a pair, should return tx=false
-        cards = new List<string> {"2|3","1|2"};
-        cards2 = new List<string> {"1|1","1|3","4|2","5|2","6|1"};
-        tx = TestIgnoreLowPair(cards, cards2, 2, hc , false);
-        ResultsUtil(!tx, print);
-    
-    //Crappola, not even a pair
-        cards = new List<string> {"2|3","1|2"};
         cards2 = new List<string> {"5|1","6|3","7|2","10|2","11|1"};
-        tx = TestNotEvenPair(cards, cards2, -1, hc );
-        ResultsUtil(tx, print);
+        tx = TestHand(cards, cards2, -1, hc, HandClass.HandStrength.Pair );
+        ResultsUtil(!tx, print);
+
 
     //Test TwoPair
         cards = new List<string> {"0|3","1|2"};
         cards2 = new List<string> {"1|1","0|3","2|2","5|2","6|1"};
-        tx = TestTwoPair(cards,cards2,(100*1) + 0,hc);
+        tx = TestHand(cards,cards2,(100*1) + 0,hc,HandClass.HandStrength.TwoPair);
         ResultsUtil(tx, print);
 
     //Test Trips
         cards = new List<string> {"0|3","1|2"};
         cards2 = new List<string> {"1|1","1|3","2|2","5|2","6|1"};
-        tx = TestTrips(cards,cards2,1,hc);
+        tx = TestHand(cards,cards2,1,hc, HandClass.HandStrength.Trips);
         ResultsUtil(tx, print);
         //TestArrayInit();
+
+    //Test Flush
+        cards = new List<string> {"0|2","1|2"};
+        cards2 = new List<string> {"1|2","1|3","2|2","5|2","6|2"};
+        tx = TestHand(cards,cards2,0,hc,HandClass.HandStrength.Flush);
+        ResultsUtil(tx, print);
 
     //Test FullHouse
         cards = new List<string> {"2|3","1|2"};
         cards2 = new List<string> {"1|1","1|3","2|2","5|2","6|1"};
-        tx = TestFullHouse(cards,cards2,(1*100) + 2,hc);
+        tx = TestHand(cards,cards2,(1*100) + 2,hc,HandClass.HandStrength.FullHouse);
         ResultsUtil(tx, print);
 
         cards = new List<string> {"2|3","7|2"};
         cards2 = new List<string> {"1|1","7|3","2|2","5|2","7|1"};
-        tx = TestFullHouse(cards,cards2,(7*100) + 2,hc);
+        tx = TestHand(cards,cards2,(7*100) + 2,hc,HandClass.HandStrength.FullHouse);
         ResultsUtil(tx, print);
 
 
     //Test FourOfAKind
         cards = new List<string> {"2|3","2|2"};
         cards2 = new List<string> {"1|1","1|3","2|0","2|2","6|1"};
-        tx = TestFourOfAKind(cards,cards2,2,hc);
+        tx = TestHand(cards,cards2,2,hc,HandClass.HandStrength.FourOfAKind);
         ResultsUtil(tx, print);
-        tx = TestFourOfAKind(cards,cards2,6,hc);
+        tx = TestHand(cards,cards2,6,hc, HandClass.HandStrength.FourOfAKind);
         ResultsUtil(!tx, print);
 
     //Test Kickers
@@ -142,14 +138,11 @@ namespace PokerApplication
         tx = TestKickers(cards,cards2,3,1,hc);
         ResultsUtil(!tx, print);     //quads dont have a 2nd kicker
 
+        //test kickers with a flush
 
-    //Build the kicker module...
-    //Logging L = new Logging();
-    //cards = new List<string> {"2|3","1|2"};    
-    //cards2 = new List<string> {"5|1","6|3","7|2","5|2","11|1"};
-    //Tuple<int, List<int>> DemIn = hc.allPairs(cards2);
-    //Console.WriteLine("The Kickers:");
-    //L.PrintOut(DemIn.Item2);            
+
+
+              
 
     Console.WriteLine(" ----------------------------------------------------- ");
 
@@ -200,29 +193,17 @@ namespace PokerApplication
             
         }
 
-        public bool TestIgnoreLowPair(List<string> inp_holeCards,
-                                      List<string> inp_commonCards,
-                                        int exp_result,
-                                        HandClass inp_hc,
-                                        bool handResult = true )
-        {
-            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+        
 
-            bool isPair = _hs.Item1 == (int) HandClass.HandStrength.Pair;
-            if (handResult) isPair = true;
-
-            if (isPair) return _hs.Item2 == exp_result;
-            return false;
-        }
-
-        public bool TestTwoPair(List<string> inp_holeCards,
+        public bool TestHand(List<string> inp_holeCards,
                                 List<string> inp_commonCards,
                                 int exp_result,
-                                HandClass inp_hc )
+                                HandClass inp_hc,
+                                HandClass.HandStrength exp_hs )
         {
             var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
 
-            bool isTrips = _hs.Item1 == (int) HandClass.HandStrength.TwoPair;
+            bool isTrips = _hs.Item1 == (int) exp_hs;
 
             bool isNumber =  _hs.Item2 == exp_result;
             
@@ -231,65 +212,9 @@ namespace PokerApplication
 
         }
 
-        public bool TestTrips(List<string> inp_holeCards,
-                                List<string> inp_commonCards,
-                                int exp_result,
-                                HandClass inp_hc )
-        {
-            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
+        
 
-            bool isTrips = _hs.Item1 == (int) HandClass.HandStrength.Trips;
-
-            bool isNumber =  _hs.Item2 == exp_result;
-            
-            if (isTrips & isNumber) return true;
-            return false;
-
-        }
-
-        public bool TestFullHouse(List<string> inp_holeCards,
-                                List<string> inp_commonCards,
-                                int exp_result,
-                                HandClass inp_hc )
-        {
-            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
-
-            bool isHand = _hs.Item1 == (int) HandClass.HandStrength.FullHouse;
-
-            //Fullhouse exp_reult: 100*(Trips-card-rank) + 1*(pair-card-rank)
-
-            bool isNumber =  _hs.Item2 == exp_result;
-            
-            if (isHand & isNumber) return true;
-            return false;
-
-        }
-
-        public bool TestFourOfAKind(List<string> inp_holeCards,
-                                    List<string> inp_commonCards,
-                                    int exp_result,
-                                    HandClass inp_hc )
-        {
-            var _hs = inp_hc.evaluateHands(inp_holeCards,inp_commonCards);
-
-            bool isTrips = _hs.Item1 == (int) HandClass.HandStrength.FourOfAKind;
-
-            bool isNumber =  _hs.Item2 == exp_result;
-            
-            if (isTrips & isNumber) return true;
-            return false;
-
-        }
-            
-        public bool TestPairs(List<string> inp_cards,
-                              int exp_result,
-                              HandClass inp_hc )
-        {    
-            Tuple<int,List<int>> ret = inp_hc.highNSet(inp_cards, 2);
-            
-            return (ret.Item1 == exp_result); 
-            
-        }
+        
 
         public void PrintOutResults()
         {
