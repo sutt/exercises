@@ -60,6 +60,7 @@ public class HandClass
 
     public enum HandStrength 
     {
+        HighCards,
         Pair,
         TwoPair,
         Trips,
@@ -146,6 +147,9 @@ public class HandClass
 
         foreach (List<string> _hand in _hands)
         {
+            myHand = returnHighCards(_hand);
+            TrackRankAndKicker( (int)HandStrength.HighCards, myHand,ref _hs, ref _hsKicker); 
+
             myHand = highNSet(_hand, 2);
             TrackRankAndKicker( (int)HandStrength.Pair, myHand,ref _hs, ref _hsKicker); 
             
@@ -232,6 +236,15 @@ public class HandClass
             }
         }
         return ret;
+    }
+
+    public Tuple<int,List<int>> returnHighCards(List<string> _cards)
+    {
+        //Returns Tuple( 0, List-of-all-card as ints)
+        
+        List<int> num_cards = getCardNums(_cards);        
+        List<int> descCards = num_cards.OrderByDescending(p => p).ToList();
+        return Tuple.Create( 0 , descCards  );
     }
 
     public Tuple<int,List<int>> highNSet(List<string> _cards, int N)

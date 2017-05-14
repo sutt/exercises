@@ -44,6 +44,8 @@ namespace PokerApplication
         tx = TestHand(cards, cards2, -1, hc, HandClass.HandStrength.Pair );
         ResultsUtil(!tx, print);
 
+        tx = TestHand(cards, cards2, 0, hc, HandClass.HandStrength.HighCards );
+        ResultsUtil(tx, print);
 
     //Test TwoPair
         cards = new List<string> {"0|3","1|2"};
@@ -161,6 +163,15 @@ namespace PokerApplication
         cards = new List<string> {"6|3","6|1"};    
         cards2 = new List<string> {"2|1","1|3","3|2","2|2","4|1"};    
         tx = TestKickers(cards,cards2,4,0,hc);
+        ResultsUtil(tx, print);
+
+        //test HighCards kickers
+        cards = new List<string> {"2|3","3|1"};    
+        cards2 = new List<string> {"5|1","6|3","7|2","0|2","11|1"};    
+        tx = TestKickers(cards,cards2,11,0,hc);
+        ResultsUtil(tx, print);
+
+        tx = TestKickers(cards,cards2,3,4,hc);
         ResultsUtil(tx, print);
         
 
