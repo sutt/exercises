@@ -193,8 +193,10 @@ public class HandClass
                 TrackRankAndKicker( (int)HandStrength.FourOfAKind, myHand,ref _hs, ref _hsKicker); 
             }
             
-            //myHand = matchSuit(_hand, 5);
-            //if myHand the if straight
+            myHand = matchSuitRunOfN(_hand, 5);
+            {
+                TrackRankAndKicker( (int)HandStrength.StraightFlush, myHand,ref _hs, ref _hsKicker); 
+            }
 
         }
 
@@ -342,7 +344,7 @@ public class HandClass
     {
         //Returns Tuple( card-rank, List-of-kickers)
         //      highest card-rank where highest of straight is returned as rank
-        //      empty list of kickers 
+        //      full list of kickers, but they are irrelevant 
 
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
         
@@ -362,6 +364,20 @@ public class HandClass
                 ret = Tuple.Create( i + N -1 , descKickers  );
             }
         }
+        return ret;
+    }
+
+
+
+    public Tuple<int,List<int>> matchSuitRunOfN(List<string> _cards, int N)
+    {
+    
+        if (matchSuit(_cards,N).Item1 > -1) 
+        {
+            if (runOfN(_cards, N).Item1 > -1) return runOfN(_cards, N);
+            if (runOfN(aceLow(_cards), N).Item1 > -1) return runOfN(aceLow(_cards), N);
+        }
+        Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
         return ret;
     }
 

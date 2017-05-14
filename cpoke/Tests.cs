@@ -74,6 +74,12 @@ namespace PokerApplication
         tx = TestHand(cards,cards2,12,hc,HandClass.HandStrength.Straight);
         ResultsUtil(tx, print);
 
+        //high card from 6 card straight
+        cards = new List<string> {"0|2","1|3"};
+        cards2 = new List<string> {"2|2","3|3","4|2","7|0","12|0"};
+        tx = TestHand(cards,cards2,4,hc,HandClass.HandStrength.Straight);
+        ResultsUtil(tx, print);
+
     //Test Flush
         cards = new List<string> {"0|2","1|2"};
         cards2 = new List<string> {"1|2","1|3","2|2","5|2","6|2"};
@@ -99,6 +105,31 @@ namespace PokerApplication
         ResultsUtil(tx, print);
         tx = TestHand(cards,cards2,6,hc, HandClass.HandStrength.FourOfAKind);
         ResultsUtil(!tx, print);
+
+    //Test StraightFlush
+         
+        cards = new List<string> {"0|3","1|3"};
+        cards2 = new List<string> {"2|3","3|3","4|3","7|0","8|0"};
+        tx = TestHand(cards,cards2,4,hc,HandClass.HandStrength.StraightFlush);
+        ResultsUtil(tx, print);
+ 
+        //acelow
+        cards = new List<string> {"0|1","1|1"};
+        cards2 = new List<string> {"2|1","3|1","9|2","7|0","12|1"};
+        tx = TestHand(cards,cards2,3,hc,HandClass.HandStrength.StraightFlush);
+        ResultsUtil(tx, print);
+
+        cards = new List<string> {"12|2","1|2"};
+        cards2 = new List<string> {"11|2","10|2","9|2","8|2","12|1"};
+        tx = TestHand(cards,cards2,12,hc,HandClass.HandStrength.StraightFlush);
+        ResultsUtil(tx, print);
+
+        //straight and flush but not straight flush
+        cards = new List<string> {"12|2","1|2"};
+        cards2 = new List<string> {"11|2","10|2","9|2","8|0","12|1"};
+        tx = TestHand(cards,cards2,12,hc,HandClass.HandStrength.StraightFlush);
+        ResultsUtil(!tx, print);
+
 
     //Test Kickers
         cards = new List<string> {"2|3","5|1"};    
