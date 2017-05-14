@@ -157,6 +157,7 @@ public class HandClass
                 TrackRankAndKicker( (int)HandStrength.Trips, myHand,ref _hs, ref _hsKicker); 
             }
 
+            //TODO: does populating the arguments take time?, worth exiting the function on -1 item1?
             //TODO: twopair
             //TODO: highNMSetRank(_hand, N, M); need kick for twopair
             //Tuple<int,List<int>> houseHand = highHouse(_hand);
