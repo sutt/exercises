@@ -173,7 +173,6 @@ public class HandClass
             TrackRankAndKicker( (int)HandStrength.StraightFlush, myHand,ref _hs, ref _hsKicker); 
             myHand = matchSuitRunOfN(aceLow(_hand), 5); 
             TrackRankAndKicker( (int)HandStrength.StraightFlush, myHand,ref _hs, ref _hsKicker); 
-
             
         }
 
@@ -344,15 +343,13 @@ public class HandClass
         return ret;
     }
 
-
-
     public Tuple<int,List<int>> matchSuitRunOfN(List<string> _cards, int N)
     {
-    
+        //if _cards.len == N, then this will return based on runOfN high card rank
+
         if (matchSuit(_cards,N).Item1 > -1) 
         {
             return runOfN(_cards, N);
-            
         }
         Tuple<int,List<int>> ret = Tuple.Create(-1,new List<int>());
         return ret;
