@@ -196,7 +196,10 @@ namespace PokerApplication
         tx = TestKickers(cards,cards2,3,1,hc);
         ResultsUtil(!tx, print);     //quads dont have a 2nd kicker
 
-        //test kickers with a flush
+        
+    //Game Class
+        tx = Game.RunGame();
+        ResultsUtil(tx, print);    
 
 
 
