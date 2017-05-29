@@ -249,6 +249,86 @@ namespace PokerApplication
         tx = TestWinner(ret2, 0);
         ResultsUtil(tx, print);
 
+        //test better second-kicker wins
+        player1 = new List<string> {"6|3","8|2"};
+        player2 = new List<string> {"6|3","9|2"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        commonCards = new List<string> {"1|1","3|3","2|0","10|2","11|1"};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestWinner(ret2, 1);
+        ResultsUtil(tx, print);
+
+        //test better kicker in worse hand loses
+        player1 = new List<string> {"6|3","12|2"};
+        player2 = new List<string> {"5|3","5|2"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        commonCards = new List<string> {"1|1","3|3","5|0","6|2","11|1"};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestWinner(ret2, 1);
+        ResultsUtil(tx, print);
+
+
+        //test better flush kicker wins
+        player1 = new List<string> {"7|0","8|0"};
+        player2 = new List<string> {"6|0","9|0"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        commonCards = new List<string> {"1|1","1|0","2|0","10|0","11|0"};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestWinner(ret2, 1);
+        ResultsUtil(tx, print);
+
+        //test 6th-best kicker in flush doesn't matter
+        player1 = new List<string> {"1|0","4|0"};
+        player2 = new List<string> {"2|0","0|0"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        commonCards = new List<string> {"6|0","7|0","8|0","10|0","11|0"};
+        List<int> exp_ret2 = new List<int>() {0,1};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestPotSplit(ret2, exp_ret2);
+        ResultsUtil(tx, print);
+
+        //test high card pot-split
+        //test pot split 3-way with fourhands
+        List<string> player3, player4;
+        player1 = new List<string> {"1|0","4|0"};
+        player2 = new List<string> {"2|0","4|0"};
+        player3 = new List<string> {"2|3","1|1"};
+        player4 = new List<string> {"1|2","4|1"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        playerHoleCards.Add(player3);
+        playerHoleCards.Add(player4);
+        commonCards = new List<string> {"0|1","7|1","8|0","10|0","11|2"};
+        exp_ret2 = new List<int>() {0,1,3};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestPotSplit(ret2, exp_ret2);
+        ResultsUtil(tx, print);
+
+        //test potsplit for board beats all hands
+        player1 = new List<string> {"1|0","4|0"};
+        player2 = new List<string> {"2|0","4|0"};
+        player3 = new List<string> {"2|3","1|1"};
+        player4 = new List<string> {"1|2","4|1"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        playerHoleCards.Add(player3);
+        playerHoleCards.Add(player4);
+        commonCards = new List<string> {"5|1","7|1","8|0","10|0","11|2"};
+        exp_ret2 = new List<int>() {0,1,3,2};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestPotSplit(ret2, exp_ret2);
+        ResultsUtil(tx, print);
+
         Console.WriteLine(" ----------------------------------------------------- ");
         PrintOutResults();
         return 1;
@@ -258,6 +338,17 @@ namespace PokerApplication
         {
             if (listWinners.Count() == 1) return (listWinners[0] == expWinner );
             return false;
+        }
+
+        public bool TestPotSplit( List<int> listWinners, List<int> expWinners)
+        {
+            foreach (int ew in expWinners) {
+                if (!listWinners.Any(i => i == ew)) return false;   
+            }
+            foreach (int lw in listWinners) {
+                if (!expWinners.Any(i => i == lw)) return false;   
+            }
+            return true;
         }
 
         public bool TestKickers(  List<string> inp_holeCards,
