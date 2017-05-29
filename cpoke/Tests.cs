@@ -30,8 +30,20 @@ namespace PokerApplication
         Results = new List<Tuple<int,bool>>();
         bool tx;
 
+    //Misc functions
+        List<int> a = new List<int>() {1,2};
+        List<int> b = new List<int>() {1,2};
+        tx = Enumerable.SequenceEqual(a.OrderBy(t =>t), b.OrderBy(t=>t));
+        ResultsUtil(tx, print);
+            
+        List<int> c = new List<int>() {1,2};
+        List<int> d = new List<int>() {1,3};
+        tx = Enumerable.SequenceEqual(c.OrderBy(t =>t), d.OrderBy(t=>t));
+        ResultsUtil(!tx, print);
 
-        
+        tx = Enumerable.SequenceEqual(a, b);
+        ResultsUtil(tx, print);
+
     //There is a pair
         cards = new List<string> {"2|3","2|2"};
         cards2 = new List<string> {"5|1","6|3","7|2","10|2","11|1"};
@@ -201,15 +213,52 @@ namespace PokerApplication
         tx = Game.RunGame();
         ResultsUtil(tx, print);    
 
+        List<List<string>> playerHoleCards = new List<List<string>>();
+        List<string> player1 = new List<string> {"2|3","1|2"};
+        List<string> player2 = new List<string> {"2|3","2|2"};
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        List<string> commonCards = new List<string> {"1|1","3|3","2|0","2|2","6|1"};
 
+        Game g = new Game();
 
-              
+        //test better hand wins
+        List<int> ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestWinner(ret2, 1);
+        ResultsUtil(tx, print);
 
-    Console.WriteLine(" ----------------------------------------------------- ");
+        //test better rank wins
+        player1 = new List<string> {"7|3","7|2"};
+        player2 = new List<string> {"6|3","6|2"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        commonCards = new List<string> {"1|1","3|3","2|0","2|2","5|1"};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestWinner(ret2, 0);
+        ResultsUtil(tx, print);
 
+        //test better kickers wins
+        player1 = new List<string> {"6|3","10|2"};
+        player2 = new List<string> {"6|3","9|2"};
+        playerHoleCards = new List<List<string>>();
+        playerHoleCards.Add(player1);
+        playerHoleCards.Add(player2);
+        commonCards = new List<string> {"1|1","3|3","2|0","2|2","6|1"};
+        ret2 = g.evalWinner(playerHoleCards,commonCards);
+        tx = TestWinner(ret2, 0);
+        ResultsUtil(tx, print);
+
+        Console.WriteLine(" ----------------------------------------------------- ");
         PrintOutResults();
         return 1;
     }
+
+        public bool TestWinner( List<int> listWinners, int expWinner)
+        {
+            if (listWinners.Count() == 1) return (listWinners[0] == expWinner );
+            return false;
+        }
 
         public bool TestKickers(  List<string> inp_holeCards,
                                       List<string> inp_commonCards,

@@ -110,7 +110,6 @@ public class HandClass
     }
      
 
-
     public bool betterKicker(List<int> kick0, List<int> kick1)
     {
         int len = Math.Max( kick0.Count, kick1.Count );
