@@ -11,6 +11,15 @@ namespace PokerApplication
 public class Game
 {
 
+    private int kitty;
+
+    //private int min_bet_size;
+
+    //private int button_position;
+
+    //private int bigbet_size;
+
+
     public static bool hello = true;
 
     public static bool RunGame()
@@ -19,6 +28,27 @@ public class Game
         //deck.dealHoleCards();
         
         return hello;
+    }
+
+    public void setKitty(int inp)
+    {
+        kitty = inp;
+    }
+    
+    public int getKitty()
+    {
+        return kitty;
+    }
+
+    public void DivvyKitty( List<int> inp_winners_ind,
+                            ref List<int> players_chips )
+    {
+        int winning_chips = kitty / inp_winners_ind.Count;
+        foreach (int ind in inp_winners_ind)
+        {
+            players_chips[ind] += winning_chips;
+        }
+        
     }
 
     public List<int> evalWinner(List<List<string>> playerHoleCards, List<string> commonCards)

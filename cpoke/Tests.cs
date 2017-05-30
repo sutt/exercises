@@ -329,11 +329,37 @@ namespace PokerApplication
         tx = TestPotSplit(ret2, exp_ret2);
         ResultsUtil(tx, print);
 
+    //Kitty splitting
+        List<int> playersChips = new List<int>() {10,10};
+        g.setKitty(49);
+        exp_ret2 = new List<int>() {0};
+        g.DivvyKitty(exp_ret2 ,ref playersChips);
+        tx = (playersChips[0] == 59) ? true : false;
+        ResultsUtil(tx, print);
+
+        //TestPotSplit
+        playersChips = new List<int>() {10,10,10};
+        List<int> expPlayersChips = new List<int>() {34,34,10};
+        g.setKitty(49);
+        exp_ret2 = new List<int>() {0,1};
+        g.DivvyKitty(exp_ret2 ,ref playersChips);
+        tx = TestPlayerChip(playersChips, expPlayersChips);
+        ResultsUtil(tx, print);
+
+
         Console.WriteLine(" ----------------------------------------------------- ");
         PrintOutResults();
         return 1;
     }
 
+        public bool TestPlayerChip( List<int> inp_chips, List<int> exp_chips)
+        {
+            for (int i = 0; i< inp_chips.Count; i++)
+            {
+                if (inp_chips[i] != exp_chips[i]) return false;
+            }
+            return true;
+        }
         public bool TestWinner( List<int> listWinners, int expWinner)
         {
             if (listWinners.Count() == 1) return (listWinners[0] == expWinner );
