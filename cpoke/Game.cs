@@ -11,6 +11,43 @@ namespace PokerApplication
 public class Game
 {
 
+    /*GameAtom:
+        GameAtom  <---> Tournament
+            : players_chips in/out
+                (: eligible_players)
+            : button_position ++
+            : big_blind_size  func(total_gameatoms)
+            [for strategy "known behavior"]
+    
+        GameAtom  <--->  Deck
+            reset after each game
+
+        GameAtom  <----> Hand
+            River, post-bet
+                winners <- evalWinner <- cards
+            [strategy would use this ]
+
+        GameAtom  <----> Betting
+            : button_position
+
+        Init
+            starting_players
+            players_chips
+
+        Turns
+            [Blinds]
+            DealCards
+            Betting
+                -> FoldedPlayers
+                    -> (Winner)
+            [EvalHands]
+                -> Winner(s)
+        Resoltuion
+            DivvyKitty
+    */
+
+
+
     private int kitty;
 
     //private int min_bet_size;
@@ -19,15 +56,46 @@ public class Game
 
     //private int bigbet_size;
 
+    private List<int> players_chips;
+    private TurnName current_turn;
 
-    public static bool hello = true;
 
-    public static bool RunGame()
+    public enum TurnName
     {
-        DeckClass deck = new DeckClass();
-        //deck.dealHoleCards();
+        PreFlop,
+        Flop,
+        Turn,
+        River
+    }
+
+    public void DoATurn()
+    {
+        //Cards
+        switch(current_turn)
+        {
+            case TurnName.PreFlop:
+                //Deck.DealCardHole(2, players) 
+                break;
+            case TurnName.Flop:
+                //Deck.DealCardCommon(3)
+                break;
+            case TurnName.River:
+            case TurnName.Turn:
+                //Deck.DealCardCommon(1)
+                break;
+        }
+
+        if (current_turn == TurnName.PreFlop) {
+            //DoBlinds(); 
+        }
         
-        return hello;
+        //Betting.Betting( current_turn )   
+            //note: betting starts pre-flop on follower of BB, but on LB afterwards
+
+        if (current_turn == TurnName.PreFlop) {
+            //evalWinner(); 
+            }
+
     }
 
     public void setKitty(int inp)

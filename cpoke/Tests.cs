@@ -210,8 +210,7 @@ namespace PokerApplication
 
         
     //Game Class
-        tx = Game.RunGame();
-        ResultsUtil(tx, print);    
+        Game g = new Game();
 
         List<List<string>> playerHoleCards = new List<List<string>>();
         List<string> player1 = new List<string> {"2|3","1|2"};
@@ -220,8 +219,7 @@ namespace PokerApplication
         playerHoleCards.Add(player2);
         List<string> commonCards = new List<string> {"1|1","3|3","2|0","2|2","6|1"};
 
-        Game g = new Game();
-
+        
         //test better hand wins
         List<int> ret2 = g.evalWinner(playerHoleCards,commonCards);
         tx = TestWinner(ret2, 1);
