@@ -8,8 +8,8 @@ using System.Collections;
 namespace PokerApplication
 {
             
-public class Game
-{
+public class GameAtom
+{   
 
     /*GameAtom:
         GameAtom  <---> Tournament
@@ -59,7 +59,14 @@ public class Game
     private List<int> players_chips;
     private TurnName current_turn;
 
+    private DeckClass gameDeck = new DeckClass();
+    
+    private List<List<string>> player_hole_cards = new List<List<string>>();
+    private List<string> common_cards = new List<string>();
 
+    private int num_players;
+    
+    private Logging L = new Logging();
     public enum TurnName
     {
         PreFlop,
@@ -74,14 +81,14 @@ public class Game
         switch(current_turn)
         {
             case TurnName.PreFlop:
-                //Deck.DealCardHole(2, players) 
+                player_hole_cards.AddRange( gameDeck.dealHoleCards(num_players) );
                 break;
             case TurnName.Flop:
-                //Deck.DealCardCommon(3)
+                common_cards.AddRange( gameDeck.dealCommonCards(3) );
                 break;
             case TurnName.River:
             case TurnName.Turn:
-                //Deck.DealCardCommon(1)
+                common_cards.AddRange( gameDeck.dealCommonCards(1) );
                 break;
         }
 
@@ -92,8 +99,10 @@ public class Game
         //Betting.Betting( current_turn )   
             //note: betting starts pre-flop on follower of BB, but on LB afterwards
 
-        if (current_turn == TurnName.PreFlop) {
-            //evalWinner(); 
+        if (current_turn == TurnName.River) {
+            DivvyKitty(
+                evalWinner(player_hole_cards,common_cards)
+                ref players_chips); 
             }
 
     }
@@ -121,6 +130,8 @@ public class Game
 
     public List<int> evalWinner(List<List<string>> playerHoleCards, List<string> commonCards)
     {
+
+        /*returns: List of player(s) who are top hand in the game */
 
         HandClass hc = new HandClass();
         int playerLen = playerHoleCards.Count;

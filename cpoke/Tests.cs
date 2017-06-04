@@ -210,7 +210,7 @@ namespace PokerApplication
 
         
     //Game Class
-        Game g = new Game();
+        GameAtom g = new GameAtom();
 
         List<List<string>> playerHoleCards = new List<List<string>>();
         List<string> player1 = new List<string> {"2|3","1|2"};
@@ -343,6 +343,12 @@ namespace PokerApplication
         g.DivvyKitty(exp_ret2 ,ref playersChips);
         tx = TestPlayerChip(playersChips, expPlayersChips);
         ResultsUtil(tx, print);
+
+    //Test Dealing
+
+        //Look for a colision in dealing cards
+        DeckClass dc  = new DeckClass();
+        //dc.dealHoleCards
 
 
         Console.WriteLine(" ----------------------------------------------------- ");

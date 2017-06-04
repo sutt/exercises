@@ -30,11 +30,10 @@ namespace PokerApplication
         }
 
 
-        public int dealCard3(List<string> deck, Random rand)
+        public int randomSample(List<string> deck, Random rand)
         {
-            int cards = deck.Count;
-            int card = rand.Next(cards - 1);
-            return card;
+            int cardInd = rand.Next(deck.Count - 1);
+            return cardInd;
         }
 
         public List<string> removeCard(List<string> _deck, int ind)
@@ -49,23 +48,26 @@ namespace PokerApplication
             List<string> data = new List<string>();
             for (int i = 1; i <= N; i++)
             {
-                int randInt = dealCard3(myDeck, _rnd);
+                int randInt = randomSample(myDeck, _rnd);
                 string thisCard = myDeck[randInt];
                 data.Add(thisCard);
-
                 myDeck = removeCard(myDeck, randInt);
             }
             return data;
         }
 
-        public List<string> dealHoleCards(int players)
+        public List<List<string>> dealHoleCards(int players, int N = 2)
         {
-            return dealNCards(2);
+            List<List<string>> ret = new List<List<string>>();
+            for (int i = 0;i < players; i++) {
+                ret.Add( dealNCards(N) )
+            }
+            return ret ;
         }
 
-        public List<string> dealCommonCards()
+        public List<string> dealCommonCards(int N)
         {
-            return dealNCards(5);
+            return dealNCards(N);
         }
 
     }
