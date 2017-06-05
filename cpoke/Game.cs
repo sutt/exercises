@@ -102,7 +102,7 @@ public class GameAtom
         if (current_turn == TurnName.River) {
             DivvyKitty(
                 evalWinner(player_hole_cards,common_cards)
-                ref players_chips); 
+                ,ref players_chips); 
             }
 
     }

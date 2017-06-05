@@ -60,7 +60,7 @@ namespace PokerApplication
         {
             List<List<string>> ret = new List<List<string>>();
             for (int i = 0;i < players; i++) {
-                ret.Add( dealNCards(N) )
+                ret.Add( dealNCards(N) );
             }
             return ret ;
         }

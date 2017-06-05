@@ -32,14 +32,16 @@ namespace PokerApplication
                                + Convert.ToString( D.getDeck().Count() ) );
             L.PrintOut(D.getDeck() , "Your deck, sir: ");
             
+            /*
             List<string> holeCards = D.dealHoleCards(1);
             List<string> commonCards = D.dealCommonCards();
 
             L.PrintOut(holeCards,"Hole Cards: ");
             L.PrintOut(commonCards,"Common Cards: ");            
-
+             */
+             
             //string num1 = card1.Split('|' )[0];
-
+            /*
             // ---- Evaluate Hands ----------
             HandClass H = new HandClass();
             
@@ -59,7 +61,7 @@ namespace PokerApplication
                 L.PrintOut(combosN, ("Combo #" + Convert.ToString(_n) + " ") );
                 L.PrintOut(handsN, ("Hand #" + Convert.ToString(_n) + " ") );                
             }
-            
+            */
             // ---- Misc and Testing ---------
             //Misc m = new Misc();
             //m.SelectManyEx2();
