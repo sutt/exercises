@@ -348,13 +348,76 @@ namespace PokerApplication
 
         //Look for a colision in dealing cards
         DeckClass dc  = new DeckClass();
-        //dc.dealHoleCards
+        List<List<string>> ret3 = dc.dealHoleCards(10);
+        tx = TestCardCollisions(ret3);
+        ResultsUtil(tx, print);
+
+        //Test that TestCardCollision actually detects collisions
+        //should return false as we purposefully setup a collision
+        player1 = new List<string> {"1|0","4|0"};
+        player2 = new List<string> {"2|0","4|0"};
+        player3 = new List<string> {"2|3","1|1"};
+        ret3.Add(player1);
+        ret3.Add(player2);
+        ret3.Add(player3);
+        tx = TestCardCollisions(ret3);
+        ResultsUtil(!tx, print);
+        
+        //Look for a colision in dealing cards
+        int nI = _rnd.Next(50);
+        for (int i = 1; i < nI; i++ )
+        {
+            int nJ = _rnd.Next(15);
+            dc  = new DeckClass();
+            ret3 = dc.dealHoleCards(nJ);
+            tx = TestCardCollisions(ret3);
+            if (!tx) ResultsUtil(tx, print);
+        }
+         ResultsUtil(true, print);
+
+         //Deal too many cards
+         //note, program collapses if this happens
+         //also note: you can't do
+        dc  = new DeckClass();
+        tx = TestNotEnoughCards(dc);
+        ResultsUtil(tx, print);
+        
+        
+        
 
 
         Console.WriteLine(" ----------------------------------------------------- ");
         PrintOutResults();
         return 1;
     }
+
+    private Random _rnd = new Random();
+
+        private bool TestNotEnoughCards(DeckClass inp_dc)
+        {
+            try {List<List<string>> ret = inp_dc.dealHoleCards(30,2);}
+            catch {return true;}
+            return false;
+        }
+
+        private bool TestCardCollisions(List<List<string>> input_hands)
+        {
+            List<string> allCards = new List<string>() {};
+            
+            foreach (List<string> hand_i in input_hands)
+            {
+                foreach ( string card_j in hand_i)
+                {
+                    allCards.Add(card_j);
+                }
+            }
+            
+            foreach (string card in allCards) {
+                if (allCards.Where(c => c == card).ToList().Count > 1) return false;
+            }
+            
+            return true;
+        }
 
         public bool TestPlayerChip( List<int> inp_chips, List<int> exp_chips)
         {

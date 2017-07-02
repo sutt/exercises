@@ -59,6 +59,7 @@ public class GameAtom
     private List<int> players_chips;
     private TurnName current_turn;
 
+    //Does this get called?
     private DeckClass gameDeck = new DeckClass();
     
     private List<List<string>> player_hole_cards = new List<List<string>>();
@@ -66,7 +67,25 @@ public class GameAtom
 
     private int num_players;
     
-    private Logging L = new Logging();
+    
+    public void GameAtomUtil()
+    {
+        Logging L = new Logging();
+        //L.PrintOut();
+        
+    }
+
+    //TODO
+    /* 
+    public int DoAGameAtom()
+    {
+        foreach (TurnName _turn in TurnName)
+        {
+
+        }
+    }
+    */
+    
     public enum TurnName
     {
         PreFlop,
@@ -159,7 +178,7 @@ public class GameAtom
         {
             return topHands;            
         } else {
-            int maxRank =evalRank.Max();
+            int maxRank = evalRank.Max();
             List<int> topRanks = Enumerable.Range(0 ,topHands.Count)
                             .Where(i => (evalRank[i] == maxRank) & 
                                         (evalHand[i] == maxHand))
